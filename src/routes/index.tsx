@@ -418,6 +418,22 @@ function WebsiteCard({
   const [imgError, setImgError] = useState(false);
   const initial = site.name[0]?.toUpperCase() ?? "?";
 
+  const normalizedUrl = (() => {
+    const raw = (site.url ?? "").trim();
+    if (!raw) return "";
+    if (/^https?:\/\//i.test(raw)) return raw;
+    return `https://${raw.replace(/^\/+/, "")}`;
+  })();
+  let isValid = false;
+  try {
+    if (normalizedUrl) {
+      const u = new URL(normalizedUrl);
+      isValid = u.protocol === "http:" || u.protocol === "https:";
+    }
+  } catch {
+    isValid = false;
+  }
+
   return (
     <div className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-lg">
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
@@ -458,16 +474,25 @@ function WebsiteCard({
       </div>
 
       <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
-        <a
-          href={site.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          <span className="truncate">Open</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </a>
+        {isValid ? (
+          <a
+            href={normalizedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition duration-200 hover:scale-105 hover:from-blue-700 hover:to-indigo-700"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            <span className="truncate">Open Website</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </a>
+        ) : (
+          <span
+            aria-disabled="true"
+            className="inline-flex min-w-0 cursor-not-allowed items-center justify-center gap-1.5 rounded-lg bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-500"
+          >
+            Website unavailable
+          </span>
+        )}
         <button
           onClick={onToggleFav}
           aria-label="Favorite"
