@@ -82,23 +82,6 @@ function OneWebsHome() {
     return scored.map(({ w }) => w);
   }, [query, filter]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _unused = () => websites.filter((w) => {
-      if (q && !(
-        w.name.toLowerCase().includes(q) ||
-        w.description.toLowerCase().includes(q) ||
-        w.category.toLowerCase().includes(q) ||
-        w.domain.toLowerCase().includes(q)
-      )) return false;
-      if (filter === "All") return true;
-      if (filter === "Popular") return !!w.popular;
-      if (filter === "New") return !!w.isNew;
-      if (filter === "Free") return w.pricing === "Free" || w.pricing === "Free + Paid";
-      if (filter === "Freemium") return w.pricing === "Freemium";
-      if (filter === "Paid") return w.pricing === "Paid" || w.pricing === "Free + Paid";
-      return true;
-    });
-
   const toggleFav = (name: string) => {
     setFavorites((prev) => {
       const next = new Set(prev);
