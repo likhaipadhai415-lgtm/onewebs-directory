@@ -11,6 +11,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import onewebsLogo from "../assets/onewebs-logo.png.asset.json";
+
+const SITE_URL = "https://find-best-sites.lovable.app";
+const LOGO_URL = `${SITE_URL}${onewebsLogo.url}`;
 
 function NotFoundComponent() {
   return (
@@ -87,14 +91,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "OneWebs — One Place. Every Website." },
       { name: "twitter:description", content: "Discover 1000+ handpicked websites across 100+ categories — AI tools, learning, productivity, shopping, and more." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/42b8638d-adb3-43f4-b7f3-d4641762d295" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/42b8638d-adb3-43f4-b7f3-d4641762d295" },
+      { property: "og:image", content: LOGO_URL },
+      { name: "twitter:image", content: LOGO_URL },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", type: "image/png", href: onewebsLogo.url },
+      { rel: "shortcut icon", type: "image/png", href: onewebsLogo.url },
+      { rel: "apple-touch-icon", href: onewebsLogo.url },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" },
