@@ -34,13 +34,9 @@ function OneWebsHome() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return websites.filter((w) => {
-      if (q && !(
-        w.name.toLowerCase().includes(q) ||
-        w.description.toLowerCase().includes(q) ||
-        w.category.toLowerCase().includes(q) ||
-        w.domain.toLowerCase().includes(q)
-      )) return false;
+    const tokens = q ? q.split(/\s+/).filter(Boolean) : [];
+
+    const matchesFilter = (w: Website) => {
       if (filter === "All") return true;
       if (filter === "Popular") return !!w.popular;
       if (filter === "New") return !!w.isNew;
@@ -48,7 +44,42 @@ function OneWebsHome() {
       if (filter === "Freemium") return w.pricing === "Freemium";
       if (filter === "Paid") return w.pricing === "Paid" || w.pricing === "Free + Paid";
       return true;
-    });
+    };
+
+    const scoreOf = (w: Website) => {
+      if (tokens.length === 0) return 0;
+      const name = w.name.toLowerCase();
+      const desc = w.description.toLowerCase();
+      const domain = w.domain.toLowerCase();
+      const cat = (categoryById(w.category)?.name ?? w.category).toLowerCase();
+      const catId = w.category.toLowerCase();
+      let score = 0;
+      for (const t of tokens) {
+        let hit = 0;
+        if (name === t) hit += 100;
+        else if (name.startsWith(t)) hit += 60;
+        else if (name.includes(t)) hit += 40;
+        if (cat === t || catId === t) hit += 50;
+        else if (cat.includes(t) || catId.includes(t)) hit += 25;
+        if (domain.includes(t)) hit += 20;
+        if (desc.includes(t)) hit += 10;
+        if (hit === 0) return -1; // token unmatched → drop
+        score += hit;
+      }
+      if (w.popular) score += 5;
+      if (w.isNew) score += 3;
+      return score;
+    };
+
+    const scored = websites
+      .filter(matchesFilter)
+      .map((w) => ({ w, s: scoreOf(w) }))
+      .filter(({ s }) => s >= 0);
+
+    if (tokens.length > 0) {
+      scored.sort((a, b) => b.s - a.s);
+    }
+    return scored.map(({ w }) => w);
   }, [query, filter]);
 
   const toggleFav = (name: string) => {
