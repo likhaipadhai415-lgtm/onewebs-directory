@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubmitRouteImport } from './routes/submit'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -26,6 +27,11 @@ const TermsRoute = TermsRouteImport.update({
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
   path: '/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/submit': typeof SubmitRoute
   '/terms': typeof TermsRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/disclaimer'
     | '/privacy'
+    | '/profile'
     | '/submit'
     | '/terms'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/disclaimer'
     | '/privacy'
+    | '/profile'
     | '/submit'
     | '/terms'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/disclaimer'
     | '/privacy'
+    | '/profile'
     | '/submit'
     | '/terms'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   DisclaimerRoute: typeof DisclaimerRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   SubmitRoute: typeof SubmitRoute
   TermsRoute: typeof TermsRoute
 }
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/submit'
       fullPath: '/submit'
       preLoaderRoute: typeof SubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   DisclaimerRoute: DisclaimerRoute,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   SubmitRoute: SubmitRoute,
   TermsRoute: TermsRoute,
 }
