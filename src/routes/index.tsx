@@ -1,13 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import {
   Search, Command, Home, LayoutGrid, TrendingUp, Sparkles, Heart, Clock,
-  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe,
+  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe, Info,
 } from "lucide-react";
 import {
   categories, websites, categoryById, faviconFor,
   type Website, type Pricing,
 } from "@/lib/onewebs-data";
+import { SiteFooter } from "@/components/SiteFooter";
+import { Highlight, tokenize } from "@/components/Highlight";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,6 +27,23 @@ function OneWebsHome() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("All");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [showRankInfo, setShowRankInfo] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("onewebs.favorites");
+      if (raw) setFavorites(new Set(JSON.parse(raw)));
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("onewebs.favorites", JSON.stringify([...favorites]));
+    } catch { /* ignore */ }
+  }, [favorites]);
+
+  const tokens = tokenize(query);
+  const isSearching = tokens.length > 0;
 
   const counts = useMemo(() => {
     const map: Record<string, number> = {};
@@ -136,21 +155,21 @@ function OneWebsHome() {
           {/* Right */}
           <div className="flex items-center gap-2 sm:gap-4">
             <nav className="hidden items-center gap-6 text-sm text-slate-600 lg:flex">
-              <a href="#" className="hover:text-slate-900">Home</a>
-              <a href="#categories" className="hover:text-slate-900">Categories</a>
-              <a href="#popular" className="hover:text-slate-900">Trending</a>
-              <a href="#popular" className="hover:text-slate-900">New</a>
-              <a href="#" className="hover:text-slate-900">About</a>
+              <Link to="/" className="hover:text-slate-900">Home</Link>
+              <Link to="/categories" className="hover:text-slate-900">Categories</Link>
+              <Link to="/trending" className="hover:text-slate-900">Trending</Link>
+              <Link to="/new" className="hover:text-slate-900">New</Link>
+              <Link to="/about" className="hover:text-slate-900">About</Link>
             </nav>
-            <button className="hidden rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 md:inline-flex">
+            <Link to="/submit" className="hidden rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 md:inline-flex">
               Submit Website
-            </button>
+            </Link>
             <button aria-label="Theme" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
               <Moon className="h-4 w-4" />
             </button>
-            <button aria-label="Account" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
+            <Link to="/profile" aria-label="Account" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
               <User className="h-4 w-4" />
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -308,15 +327,48 @@ function OneWebsHome() {
                 ))}
               </div>
               <div className="hidden shrink-0 text-xs text-slate-500 sm:block">
-                Sort by: <span className="font-medium text-slate-700">Popular</span>
+                Sort by: <span className="font-medium text-slate-700">{isSearching ? "Relevance" : "Popular"}</span>
+                <button
+                  onClick={() => setShowRankInfo((v) => !v)}
+                  className="ml-2 inline-flex items-center gap-1 text-slate-400 hover:text-slate-600"
+                  aria-label="How ranking works"
+                >
+                  <Info className="h-3.5 w-3.5" />
+                </button>
               </div>
             </div>
+
+            {showRankInfo && (
+              <div className="mt-3 rounded-2xl border border-blue-100 bg-blue-50/60 p-4 text-xs leading-relaxed text-slate-700">
+                <div className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-900">
+                  <Info className="h-4 w-4 text-blue-600" /> How results are ranked
+                </div>
+                {isSearching ? (
+                  <>Every result must match all of your terms. Points are added for
+                  where the match happens:</>
+                ) : (
+                  <>Type a term above to rank by relevance. Without a query, sites
+                  are ordered by category and popularity.</>
+                )}
+                <ul className="mt-2 grid gap-1 sm:grid-cols-2">
+                  <li>• Exact name match — <strong>+100</strong></li>
+                  <li>• Name starts with term — <strong>+60</strong></li>
+                  <li>• Name contains term — <strong>+40</strong></li>
+                  <li>• Exact category / tag — <strong>+50</strong></li>
+                  <li>• Category contains term — <strong>+25</strong></li>
+                  <li>• Domain contains term — <strong>+20</strong></li>
+                  <li>• Description contains term — <strong>+10</strong></li>
+                  <li>• Popular pick bonus — <strong>+5</strong>, new — <strong>+3</strong></li>
+                </ul>
+              </div>
+            )}
 
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {filtered.slice(0, 20).map((site) => (
                 <WebsiteCard
                   key={site.name}
                   site={site}
+                  tokens={tokens}
                   isFav={favorites.has(site.name)}
                   onToggleFav={() => toggleFav(site.name)}
                   onShare={() => share(site)}
@@ -355,6 +407,7 @@ function OneWebsHome() {
                     <WebsiteCard
                       key={site.name}
                       site={site}
+                      tokens={tokens}
                       isFav={favorites.has(site.name)}
                       onToggleFav={() => toggleFav(site.name)}
                       onShare={() => share(site)}
@@ -364,12 +417,9 @@ function OneWebsHome() {
               </section>
             );
           })}
-
-          <footer className="border-t border-slate-100 pt-8 pb-4 text-center text-xs text-slate-400">
-            © {new Date().getFullYear()} OneWebs — One Place. Every Website.
-          </footer>
         </main>
       </div>
+      <SiteFooter />
     </div>
   );
 }
@@ -443,8 +493,8 @@ function PricingBadge({ pricing }: { pricing: Pricing }) {
 }
 
 function WebsiteCard({
-  site, isFav, onToggleFav, onShare,
-}: { site: Website; isFav: boolean; onToggleFav: () => void; onShare: () => void }) {
+  site, isFav, onToggleFav, onShare, tokens = [],
+}: { site: Website; isFav: boolean; onToggleFav: () => void; onShare: () => void; tokens?: string[] }) {
   const cat = categoryById(site.category);
   const [imgError, setImgError] = useState(false);
   const initial = site.name[0]?.toUpperCase() ?? "?";
@@ -483,7 +533,9 @@ function WebsiteCard({
         </div>
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-1">
-            <span className="truncate text-sm font-semibold text-slate-900">{site.name}</span>
+            <span className="truncate text-sm font-semibold text-slate-900">
+              <Highlight text={site.name} tokens={tokens} />
+            </span>
             {site.official && (
               <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 fill-blue-500" aria-label="Verified">
                 <path d="M12 2l2.09 2.26L17 3.5l.5 3.09L20.5 8l-1.24 2.91L20.5 14l-2.91 1.5-.5 3.09-2.91-.76L12 20l-2.18-2.17-2.91.76-.5-3.09L3.5 14l1.24-3.09L3.5 8l2.91-1.41.5-3.09 2.91.76z" />
@@ -491,7 +543,9 @@ function WebsiteCard({
               </svg>
             )}
           </div>
-          <p className="mt-1 line-clamp-2 text-xs text-slate-500">{site.description}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-slate-500">
+            <Highlight text={site.description} tokens={tokens} />
+          </p>
         </div>
       </div>
 
