@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { categories, websites } from "@/lib/onewebs-data";
+import { useApprovedSites } from "@/hooks/use-approved-sites";
 
 const URL = "https://find-best-sites.lovable.app/categories";
 const TITLE = "All Categories — OneWebs";
@@ -22,8 +23,9 @@ export const Route = createFileRoute("/categories")({
 });
 
 function CategoriesPage() {
+  const { data: extras = [] } = useApprovedSites();
   const counts: Record<string, number> = {};
-  for (const w of websites) counts[w.category] = (counts[w.category] ?? 0) + 1;
+  for (const w of [...websites, ...extras]) counts[w.category] = (counts[w.category] ?? 0) + 1;
 
   return (
     <PageShell
