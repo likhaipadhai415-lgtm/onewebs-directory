@@ -35,8 +35,6 @@ function toWebsite(row: ApprovedSubmission): Website {
     official: false,
     popular: row.popular,
     isNew: row.is_new,
-    // custom logo lives in `logoUrl` (used by WebsiteCard when set)
-    // @ts-expect-error extend Website with optional logo
     logoUrl: row.logo_url,
   };
 }
