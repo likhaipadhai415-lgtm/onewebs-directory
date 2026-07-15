@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { websites, faviconFor, categoryById } from "@/lib/onewebs-data";
+import { useApprovedSites } from "@/hooks/use-approved-sites";
 import { ExternalLink, Sparkles } from "lucide-react";
 
 const URL = "https://find-best-sites.lovable.app/new";
@@ -23,7 +24,8 @@ export const Route = createFileRoute("/new")({
 });
 
 function NewPage() {
-  const list = websites.filter((w) => w.isNew);
+  const { data: extras = [] } = useApprovedSites();
+  const list = [...websites, ...extras].filter((w) => w.isNew);
   return (
     <PageShell kicker="New" title="Fresh additions to OneWebs." intro="Recently added — worth checking out.">
       {list.length === 0 ? (
@@ -37,7 +39,7 @@ function NewPage() {
             const cat = categoryById(s.category);
             return (
               <div key={s.name} className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3">
-                <img src={faviconFor(s.domain)} alt="" className="h-8 w-8 rounded-lg border border-slate-100 bg-slate-50 object-contain p-1" />
+                <img src={s.logoUrl ?? faviconFor(s.domain)} alt="" className="h-8 w-8 rounded-lg border border-slate-100 bg-slate-50 object-contain p-1" />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-semibold text-slate-900">{s.name}</div>
                   <div className="truncate text-xs text-slate-500">{cat?.name}</div>
