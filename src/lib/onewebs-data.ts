@@ -17,6 +17,7 @@ export type Website = {
   official?: boolean;
   popular?: boolean;
   isNew?: boolean;
+  logoUrl?: string;
 };
 
 export type Category = {
