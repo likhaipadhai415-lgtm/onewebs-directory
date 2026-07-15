@@ -10,6 +10,7 @@ import {
 } from "@/lib/onewebs-data";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Highlight, tokenize } from "@/components/Highlight";
+import { useApprovedSites } from "@/hooks/use-approved-sites";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,6 +29,8 @@ function OneWebsHome() {
   const [filter, setFilter] = useState<Filter>("All");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showRankInfo, setShowRankInfo] = useState(false);
+  const { data: approvedExtras = [] } = useApprovedSites();
+  const allSites = useMemo(() => [...websites, ...approvedExtras], [approvedExtras]);
 
   useEffect(() => {
     try {
@@ -47,9 +50,9 @@ function OneWebsHome() {
 
   const counts = useMemo(() => {
     const map: Record<string, number> = {};
-    for (const w of websites) map[w.category] = (map[w.category] ?? 0) + 1;
+    for (const w of allSites) map[w.category] = (map[w.category] ?? 0) + 1;
     return map;
-  }, []);
+  }, [allSites]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -90,7 +93,7 @@ function OneWebsHome() {
       return score;
     };
 
-    const scored = websites
+    const scored = allSites
       .filter(matchesFilter)
       .map((w) => ({ w, s: scoreOf(w) }))
       .filter(({ s }) => s >= 0);
@@ -99,7 +102,7 @@ function OneWebsHome() {
       scored.sort((a, b) => b.s - a.s);
     }
     return scored.map(({ w }) => w);
-  }, [query, filter]);
+  }, [query, filter, allSites]);
 
   const toggleFav = (name: string) => {
     setFavorites((prev) => {
@@ -521,7 +524,7 @@ function WebsiteCard({
         <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
           {!imgError ? (
             <img
-              src={faviconFor(site.domain)}
+              src={site.logoUrl ?? faviconFor(site.domain)}
               onError={() => setImgError(true)}
               alt={`${site.name} logo`}
               className="h-8 w-8 object-contain"
