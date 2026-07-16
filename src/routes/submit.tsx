@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { categories } from "@/lib/onewebs-data";
-import { Send, CheckCircle2, Upload, X, AlertCircle, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, Upload, X, AlertCircle, Loader2, Clock, XCircle, ExternalLink, RefreshCw, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
 const URL = "https://find-best-sites.lovable.app/submit";
 const TITLE = "Submit a Website — OneWebs";
@@ -37,12 +40,14 @@ async function fileToDataUrl(file: File): Promise<string> {
 }
 
 function SubmitPage() {
+  const { user, loading: authLoading } = useAuth();
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const qc = useQueryClient();
 
   const [form, setForm] = useState({
     name: "",
@@ -50,7 +55,7 @@ function SubmitPage() {
     category: "",
     description: "",
     pricing: "",
-    submitter_email: "",
+    submitter_email: user?.email ?? "",
     relation: "fan",
   });
 
@@ -97,6 +102,7 @@ function SubmitPage() {
       });
       if (error) throw error;
       setSent(true);
+      qc.invalidateQueries({ queryKey: ["my-submissions"] });
     } catch (e: any) {
       setErr(e?.message ?? "Could not submit — please try again.");
     } finally {
