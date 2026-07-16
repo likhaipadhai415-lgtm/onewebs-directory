@@ -272,3 +272,188 @@ function Field({
     </label>
   );
 }
+
+type MySub = {
+  id: string;
+  name: string;
+  url: string;
+  category: string;
+  pricing: string;
+  logo_url: string;
+  status: "pending" | "approved" | "declined";
+  created_at: string;
+  reviewed_at: string | null;
+};
+
+function MySubmissions({
+  user,
+  authLoading,
+}: {
+  user: ReturnType<typeof useAuth>["user"];
+  authLoading: boolean;
+}) {
+  const qc = useQueryClient();
+  const email = user?.email ?? null;
+
+  const { data, isLoading, refetch, isFetching } = useQuery({
+    queryKey: ["my-submissions", email],
+    queryFn: async (): Promise<MySub[]> => {
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("id,name,url,category,pricing,logo_url,status,created_at,reviewed_at")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as MySub[];
+    },
+    enabled: !!email,
+    staleTime: 30_000,
+  });
+
+  if (authLoading) return null;
+
+  if (!user) {
+    return (
+      <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5">
+        <div className="flex items-start gap-3">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-600">
+            <LogIn className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <h2 className="text-sm font-semibold text-slate-900">Track your submissions</h2>
+            <p className="mt-1 text-xs text-slate-600">
+              Sign in with the same email you use to submit, and you'll see the live status
+              (pending, approved, or declined) of every website you send us.
+            </p>
+            <Link
+              to="/auth"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-800"
+            >
+              <LogIn className="h-3.5 w-3.5" /> Sign in to track
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const rows = data ?? [];
+  const counts = {
+    pending: rows.filter((r) => r.status === "pending").length,
+    approved: rows.filter((r) => r.status === "approved").length,
+    declined: rows.filter((r) => r.status === "declined").length,
+  };
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold text-slate-900">Your submissions</h2>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Signed in as <strong className="text-slate-700">{email}</strong>
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <StatChip label="Pending" value={counts.pending} tone="amber" />
+          <StatChip label="Approved" value={counts.approved} tone="emerald" />
+          <StatChip label="Declined" value={counts.declined} tone="rose" />
+          <button
+            onClick={() => {
+              refetch();
+              qc.invalidateQueries({ queryKey: ["approved-submissions"] });
+            }}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
+            title="Refresh"
+          >
+            <RefreshCw className={`h-3 w-3 ${isFetching ? "animate-spin" : ""}`} />
+          </button>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
+          <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading your submissions…
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="mt-4 rounded-xl border border-dashed border-slate-200 p-6 text-center text-xs text-slate-500">
+          You haven't submitted any websites yet. Fill the form below to get started.
+        </div>
+      ) : (
+        <ul className="mt-4 divide-y divide-slate-100">
+          {rows.map((s) => (
+            <li key={s.id} className="flex items-start gap-3 py-3">
+              <img
+                src={s.logo_url}
+                alt=""
+                className="h-10 w-10 shrink-0 rounded-lg border border-slate-100 bg-slate-50 object-contain p-1"
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="truncate text-sm font-semibold text-slate-900">{s.name}</span>
+                  <StatusBadge status={s.status} />
+                </div>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-0.5 inline-flex items-center gap-1 truncate text-[11px] text-blue-600 hover:underline"
+                >
+                  {s.url} <ExternalLink className="h-3 w-3" />
+                </a>
+                <div className="mt-1 text-[11px] text-slate-500">
+                  Submitted {new Date(s.created_at).toLocaleDateString()}
+                  {s.reviewed_at && s.status !== "pending" && (
+                    <> · {s.status === "approved" ? "Approved" : "Declined"} {new Date(s.reviewed_at).toLocaleDateString()}</>
+                  )}
+                </div>
+                {s.status === "pending" && (
+                  <p className="mt-1 text-[11px] text-amber-700">Our admin will review this shortly.</p>
+                )}
+                {s.status === "approved" && (
+                  <p className="mt-1 text-[11px] text-emerald-700">Live on OneWebs — thanks for the submission!</p>
+                )}
+                {s.status === "declined" && (
+                  <p className="mt-1 text-[11px] text-rose-700">Not accepted this time. Feel free to submit a different site.</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function StatChip({ label, value, tone }: { label: string; value: number; tone: "amber" | "emerald" | "rose" }) {
+  const map = {
+    amber: "bg-amber-50 text-amber-700 border-amber-200",
+    emerald: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    rose: "bg-rose-50 text-rose-700 border-rose-200",
+  } as const;
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-semibold ${map[tone]}`}>
+      {label} <span className="tabular-nums">{value}</span>
+    </span>
+  );
+}
+
+function StatusBadge({ status }: { status: MySub["status"] }) {
+  if (status === "pending") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 ring-1 ring-amber-200">
+        <Clock className="h-3 w-3" /> Pending review
+      </span>
+    );
+  }
+  if (status === "approved") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-200">
+        <CheckCircle2 className="h-3 w-3" /> Approved
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 rounded-md bg-rose-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-rose-700 ring-1 ring-rose-200">
+      <XCircle className="h-3 w-3" /> Declined
+    </span>
+  );
+}
