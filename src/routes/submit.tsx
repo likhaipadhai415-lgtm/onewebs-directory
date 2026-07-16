@@ -121,6 +121,17 @@ function SubmitPage() {
             <strong>likhaipadhai415@gmail.com</strong> if we need more info.
           </div>
         </div>
+        <div className="not-prose mt-6 flex flex-wrap gap-2">
+          <button
+            onClick={() => setSent(false)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-800"
+          >
+            Submit another
+          </button>
+        </div>
+        <div className="mt-8">
+          <MySubmissions user={user} authLoading={authLoading} />
+        </div>
       </PageShell>
     );
   }
@@ -131,6 +142,9 @@ function SubmitPage() {
       title="Add your website to OneWebs."
       intro="Free to submit, reviewed by a human. Please share a real, working product — logo required."
     >
+      <div className="not-prose mb-8">
+        <MySubmissions user={user} authLoading={authLoading} />
+      </div>
       <form onSubmit={onSubmit} className="not-prose grid gap-4">
         <Field label="Website logo" required>
           <div className="flex items-start gap-4">
