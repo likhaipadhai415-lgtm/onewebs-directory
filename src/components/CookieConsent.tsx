@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Cookie, X } from "lucide-react";
 
 const KEY = "onewebs.cookieConsent";
+const POLICY_VERSION = "2026-07-17";
 
 export function CookieConsent() {
   const [show, setShow] = useState(false);
@@ -20,7 +21,17 @@ export function CookieConsent() {
 
   const decide = (value: "accepted" | "declined") => {
     try {
-      localStorage.setItem(KEY, JSON.stringify({ value, at: Date.now() }));
+      const now = new Date();
+      localStorage.setItem(
+        KEY,
+        JSON.stringify({
+          value,
+          at: now.getTime(),
+          timestamp: now.toISOString(),
+          policyVersion: POLICY_VERSION,
+          userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+        }),
+      );
     } catch {
       // ignore
     }
