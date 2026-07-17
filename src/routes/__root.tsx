@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import onewebsLogo from "../assets/onewebs-logo.png.asset.json";
+import { Toaster } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/CookieConsent";
+import { SubmissionNotifier } from "@/components/SubmissionNotifier";
 
 const SITE_URL = "https://find-best-sites.lovable.app";
 const LOGO_URL = `${SITE_URL}${onewebsLogo.url}`;
@@ -134,6 +137,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <SubmissionNotifier />
+      <CookieConsent />
+      <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>
   );
 }
