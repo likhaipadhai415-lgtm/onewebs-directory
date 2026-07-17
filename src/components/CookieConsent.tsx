@@ -55,9 +55,13 @@ export function CookieConsent() {
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
               OneWebs stores small preferences on your device — favorites,
               recently viewed sites, and your theme — to keep the experience
-              smooth. No third-party tracking.{" "}
+              smooth. No third-party tracking. Read our{" "}
+              <Link to="/privacy" className="font-semibold text-blue-600 hover:underline">
+                Privacy Policy
+              </Link>{" "}
+              and{" "}
               <Link to="/cookies" className="font-semibold text-blue-600 hover:underline">
-                Learn more
+                Cookie Policy
               </Link>
               .
             </p>
