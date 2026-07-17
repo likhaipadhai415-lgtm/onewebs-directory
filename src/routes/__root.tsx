@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import onewebsLogo from "../assets/onewebs-logo.png.asset.json";
+import { ClientOnly } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SubmissionNotifier } from "@/components/SubmissionNotifier";
@@ -137,9 +138,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      <SubmissionNotifier />
-      <CookieConsent />
-      <Toaster position="top-right" richColors closeButton />
+      <ClientOnly fallback={null}>
+        <SubmissionNotifier />
+        <CookieConsent />
+        <Toaster position="top-right" richColors closeButton />
+      </ClientOnly>
     </QueryClientProvider>
   );
 }

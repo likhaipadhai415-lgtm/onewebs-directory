@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Cookie, X } from "lucide-react";
 
 const KEY = "onewebs.cookieConsent";
+const POLICY_VERSION = "2026-07-17";
 
 export function CookieConsent() {
   const [show, setShow] = useState(false);
@@ -20,7 +21,17 @@ export function CookieConsent() {
 
   const decide = (value: "accepted" | "declined") => {
     try {
-      localStorage.setItem(KEY, JSON.stringify({ value, at: Date.now() }));
+      const now = new Date();
+      localStorage.setItem(
+        KEY,
+        JSON.stringify({
+          value,
+          at: now.getTime(),
+          timestamp: now.toISOString(),
+          policyVersion: POLICY_VERSION,
+          userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+        }),
+      );
     } catch {
       // ignore
     }
@@ -55,9 +66,13 @@ export function CookieConsent() {
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
               OneWebs stores small preferences on your device — favorites,
               recently viewed sites, and your theme — to keep the experience
-              smooth. No third-party tracking.{" "}
+              smooth. No third-party tracking. Read our{" "}
+              <Link to="/privacy" className="font-semibold text-blue-600 hover:underline">
+                Privacy Policy
+              </Link>{" "}
+              and{" "}
               <Link to="/cookies" className="font-semibold text-blue-600 hover:underline">
-                Learn more
+                Cookie Policy
               </Link>
               .
             </p>
