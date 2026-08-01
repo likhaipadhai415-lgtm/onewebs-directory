@@ -17,6 +17,7 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "OneWebs — One Place. Every Website." },
       { name: "description", content: "Discover 1000+ handpicked websites across 100+ categories — AI tools, learning, productivity, shopping, and more." },
+      { name: "google-site-verification", content: "q63Xs7Y8fDgb72-p_NmPLGvPmXWAStlzrO-cGugrVGI" },
     ],
   }),
   component: OneWebsHome,
