@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://find-best-sites.lovable.app/sitemap.xml
+Sitemap: https://onewebs.vercel.app/sitemap.xml
