@@ -27,10 +27,10 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin" }).catch(() => {});
+      if (data.session) navigate({ to: data.session.user.email === "likhaipadhai415@gmail.com" ? "/admin" : "/submit" }).catch(() => {});
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN") navigate({ to: "/admin" }).catch(() => {});
+    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === "SIGNED_IN") navigate({ to: s?.user?.email === "likhaipadhai415@gmail.com" ? "/admin" : "/submit" }).catch(() => {});
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
