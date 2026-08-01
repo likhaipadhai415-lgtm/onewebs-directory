@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell } from "@/components/PageShell";
 import { LogIn, UserPlus } from "lucide-react";
+import { normalizeUsername, toAuthEmail, isEmail } from "@/lib/username-auth";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -26,10 +27,10 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin" }).catch(() => {});
+      if (data.session) navigate({ to: data.session.user.email === "likhaipadhai415@gmail.com" ? "/admin" : "/submit" }).catch(() => {});
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN") navigate({ to: "/admin" }).catch(() => {});
+    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === "SIGNED_IN") navigate({ to: s?.user?.email === "likhaipadhai415@gmail.com" ? "/admin" : "/submit" }).catch(() => {});
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
@@ -41,19 +42,29 @@ function AuthPage() {
     setMsg(null);
     try {
       if (mode === "signup") {
+        if (!isEmail(identifier) && normalizeUsername(identifier).length < 3) {
+          throw new Error("Username must be at least 3 characters (letters, numbers, . _ -).");
+        }
         const { error } = await supabase.auth.signUp({
-          email,
+          email: toAuthEmail(identifier),
           password,
           options: { emailRedirectTo: window.location.origin + "/auth" },
         });
         if (error) throw error;
-        setMsg("Check your inbox — confirm your email to finish signup.");
+        setMsg("Account created — you're signed in.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: toAuthEmail(identifier),
+          password,
+        });
         if (error) throw error;
       }
     } catch (e: any) {
-      setErr(e?.message ?? "Something went wrong.");
+      setErr(
+        e?.message === "Invalid login credentials"
+          ? "Wrong username or password."
+          : e?.message ?? "Something went wrong.",
+      );
     } finally {
       setBusy(false);
     }
@@ -63,18 +74,23 @@ function AuthPage() {
     <PageShell
       kicker={mode === "signin" ? "Sign in" : "Create account"}
       title={mode === "signin" ? "Welcome back." : "Join OneWebs."}
-      intro="Sign in to submit websites and — if you're the admin — review submissions."
+      intro="Sign in with your username and password to track your submissions — or use your admin email."
     >
       <form onSubmit={onSubmit} className="not-prose grid gap-4 max-w-md">
         <label className="block">
-          <span className="mb-1.5 block text-xs font-semibold text-slate-700">Email</span>
+          <span className="mb-1.5 block text-xs font-semibold text-slate-700">Username</span>
           <input
-            type="email"
+            type="text"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
+            placeholder="yourname"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
           />
+          <span className="mt-1 block text-[11px] text-slate-500">
+            No email needed. Choose a username you'll remember — password reset by email isn't available.
+          </span>
         </label>
         <label className="block">
           <span className="mb-1.5 block text-xs font-semibold text-slate-700">Password</span>
@@ -82,6 +98,7 @@ function AuthPage() {
             type="password"
             required
             minLength={6}
+            autoComplete={mode === "signin" ? "current-password" : "new-password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"

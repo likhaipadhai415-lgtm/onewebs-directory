@@ -7,6 +7,7 @@ import { categories } from "@/lib/onewebs-data";
 import { Send, CheckCircle2, Upload, X, AlertCircle, Loader2, Clock, XCircle, ExternalLink, RefreshCw, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { displayIdentity } from "@/lib/username-auth";
 
 const URL = "https://find-best-sites.lovable.app/submit";
 const TITLE = "Submit a Website — OneWebs";
@@ -96,7 +97,7 @@ function SubmitPage() {
         category: form.category,
         description: form.description.trim(),
         pricing: form.pricing,
-        submitter_email: form.submitter_email.trim(),
+        submitter_email: (user?.email ?? form.submitter_email).trim(),
         relation: form.relation,
         logo_url: logoPreview,
       });
@@ -217,9 +218,19 @@ function SubmitPage() {
             <option>Free + Paid</option>
           </select>
         </Field>
-        <Field label="Your email" required>
-          <input required type="email" value={form.submitter_email} onChange={set("submitter_email")} placeholder="you@example.com" className={inputCls} />
-        </Field>
+        {user ? (
+          <Field label="Submitting as" required>
+            <input
+              readOnly
+              value={displayIdentity(user.email)}
+              className={`${inputCls} bg-slate-50 text-slate-600`}
+            />
+          </Field>
+        ) : (
+          <Field label="Your email" required>
+            <input required type="email" value={form.submitter_email} onChange={set("submitter_email")} placeholder="you@example.com" className={inputCls} />
+          </Field>
+        )}
         <Field label="Your relationship to this website">
           <select value={form.relation} onChange={set("relation")} className={inputCls}>
             <option value="owner">I own or work on it</option>
@@ -321,7 +332,7 @@ function MySubmissions({
           <div className="flex-1">
             <h2 className="text-sm font-semibold text-slate-900">Track your submissions</h2>
             <p className="mt-1 text-xs text-slate-600">
-              Sign in with the same email you use to submit, and you'll see the live status
+              Sign in with your username and password, and you'll see the live status
               (pending, approved, or declined) of every website you send us.
             </p>
             <Link
@@ -349,7 +360,7 @@ function MySubmissions({
         <div>
           <h2 className="text-sm font-semibold text-slate-900">Your submissions</h2>
           <p className="mt-0.5 text-xs text-slate-500">
-            Signed in as <strong className="text-slate-700">{email}</strong>
+            Signed in as <strong className="text-slate-700">{displayIdentity(email)}</strong>
           </p>
         </div>
         <div className="flex items-center gap-2">
