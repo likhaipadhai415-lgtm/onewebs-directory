@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Command, Home, LayoutGrid, TrendingUp, Sparkles, Heart, Clock,
-  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe, Info,
+  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe, Info, Menu, X,
 } from "lucide-react";
 import {
   categories, websites, categoryById, faviconFor,
@@ -30,6 +30,7 @@ function OneWebsHome() {
   const [filter, setFilter] = useState<Filter>("All");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showRankInfo, setShowRankInfo] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { data: approvedExtras = [] } = useApprovedSites();
   const allSites = useMemo(() => [...websites, ...approvedExtras], [approvedExtras]);
 
@@ -128,7 +129,7 @@ function OneWebsHome() {
     <div className="min-h-screen bg-white text-slate-900">
       {/* Top bar */}
       <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:px-6">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:gap-4 sm:px-6">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
@@ -174,8 +175,51 @@ function OneWebsHome() {
             <Link to="/profile" aria-label="Account" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
               <User className="h-4 w-4" />
             </Link>
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Menu"
+              aria-expanded={menuOpen}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-600 lg:hidden"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile search */}
+        <div className="px-4 pb-3 sm:hidden">
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm text-slate-500 focus-within:border-blue-300 focus-within:bg-white">
+            <Search className="h-4 w-4 shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search websites, categories..."
+              className="min-w-0 flex-1 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
+            />
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="border-t border-slate-100 bg-white px-4 py-3 lg:hidden">
+            <nav className="grid gap-1 text-sm font-medium text-slate-700">
+              <Link to="/" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Home</Link>
+              <Link to="/categories" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Categories</Link>
+              <Link to="/trending" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Trending</Link>
+              <Link to="/new" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">New Websites</Link>
+              <Link to="/about" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">About</Link>
+              <Link to="/profile" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Profile</Link>
+              <Link
+                to="/submit"
+                onClick={() => setMenuOpen(false)}
+                className="mt-1 rounded-lg bg-blue-600 px-3 py-2 text-center font-semibold text-white"
+              >
+                Submit Website
+              </Link>
+            </nav>
+          </div>
+        )}
       </header>
 
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-6 px-4 py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-6">
