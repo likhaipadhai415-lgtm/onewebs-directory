@@ -319,52 +319,52 @@ function OneWebsHome() {
               <a
                 key={c.id}
                 href={`#cat-${c.id}`}
-                className={`group flex items-center gap-3 rounded-2xl border border-slate-100 ${c.tint} p-4 transition hover:-translate-y-0.5 hover:shadow-md`}
+                className={`group flex items-center gap-2.5 rounded-2xl border border-slate-100 ${c.tint} p-3 transition hover:-translate-y-0.5 hover:shadow-md sm:gap-3 sm:p-4`}
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/70 shadow-sm">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/70 shadow-sm sm:h-10 sm:w-10">
                   <c.icon className={`h-5 w-5 ${c.iconColor}`} />
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold text-slate-900">{c.name}</span>
-                  <span className="text-xs text-slate-500">{counts[c.id] ?? 0} Websites</span>
+                  <span className="block text-[13px] font-semibold leading-tight text-slate-900 sm:text-sm">{c.name}</span>
+                  <span className="text-[11px] text-slate-500 sm:text-xs">{counts[c.id] ?? 0} Websites</span>
                 </span>
               </a>
             ))}
-            <a href="#categories" className="flex items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-100">
+            <a href="#categories" className="flex items-center gap-2.5 rounded-2xl border border-dashed border-slate-200 bg-white p-3 transition hover:border-slate-300 hover:shadow-sm sm:gap-3 sm:p-4">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-100 sm:h-10 sm:w-10">
                 <LayoutGrid className="h-5 w-5 text-slate-500" />
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-semibold text-slate-900">More</span>
-                <span className="text-xs text-slate-500">Categories</span>
+                <span className="block text-[13px] font-semibold text-slate-900 sm:text-sm">More</span>
+                <span className="text-[11px] text-slate-500 sm:text-xs">Categories</span>
               </span>
             </a>
           </section>
 
           {/* Popular */}
           <section id="popular">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:items-end sm:gap-4">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-orange-100">
                     <Flame className="h-4 w-4 text-orange-500" />
                   </span>
-                  <h2 className="truncate text-xl font-bold text-slate-900 sm:text-2xl">Popular Websites</h2>
+                  <h2 className="truncate text-lg font-bold text-slate-900 sm:text-2xl">Popular Websites</h2>
                 </div>
-                <p className="mt-1 text-sm text-slate-500">Most popular and useful websites handpicked for you</p>
+                <p className="mt-1 text-xs text-slate-500 sm:text-sm">Most popular and useful websites handpicked for you</p>
               </div>
-              <button className="shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
+              <button className="mt-1 shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
                 View All
               </button>
             </div>
 
-            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:mt-5">
+              <div className="-mx-4 flex min-w-0 items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
                 {(["All", "Free", "Freemium", "Paid", "Popular", "New"] as Filter[]).map((f) => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                       filter === f
                         ? "bg-blue-600 text-white shadow-sm"
                         : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
