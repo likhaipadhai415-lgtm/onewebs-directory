@@ -126,7 +126,7 @@ function OneWebsHome() {
   const topSidebarCats = categories.slice(0, 7);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">
       {/* Top bar */}
       <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:gap-4 sm:px-6">
