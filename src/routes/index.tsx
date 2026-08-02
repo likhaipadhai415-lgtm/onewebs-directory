@@ -359,7 +359,7 @@ function OneWebsHome() {
             </div>
 
             <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:mt-5">
-              <div className="-mx-4 flex min-w-0 items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+              <div className="flex min-w-0 items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
                 {(["All", "Free", "Freemium", "Paid", "Popular", "New"] as Filter[]).map((f) => (
                   <button
                     key={f}
