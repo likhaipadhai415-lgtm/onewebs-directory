@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Command, Home, LayoutGrid, TrendingUp, Sparkles, Heart, Clock,
-  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe, Info,
+  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe, Info, Menu, X,
 } from "lucide-react";
 import {
   categories, websites, categoryById, faviconFor,
@@ -30,6 +30,7 @@ function OneWebsHome() {
   const [filter, setFilter] = useState<Filter>("All");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showRankInfo, setShowRankInfo] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { data: approvedExtras = [] } = useApprovedSites();
   const allSites = useMemo(() => [...websites, ...approvedExtras], [approvedExtras]);
 
@@ -125,10 +126,10 @@ function OneWebsHome() {
   const topSidebarCats = categories.slice(0, 7);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">
       {/* Top bar */}
       <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:px-6">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:gap-4 sm:px-6">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
@@ -174,8 +175,51 @@ function OneWebsHome() {
             <Link to="/profile" aria-label="Account" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
               <User className="h-4 w-4" />
             </Link>
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Menu"
+              aria-expanded={menuOpen}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-600 lg:hidden"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile search */}
+        <div className="px-4 pb-3 sm:hidden">
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm text-slate-500 focus-within:border-blue-300 focus-within:bg-white">
+            <Search className="h-4 w-4 shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search websites, categories..."
+              className="min-w-0 flex-1 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
+            />
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="border-t border-slate-100 bg-white px-4 py-3 lg:hidden">
+            <nav className="grid gap-1 text-sm font-medium text-slate-700">
+              <Link to="/" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Home</Link>
+              <Link to="/categories" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Categories</Link>
+              <Link to="/trending" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Trending</Link>
+              <Link to="/new" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">New Websites</Link>
+              <Link to="/about" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">About</Link>
+              <Link to="/profile" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Profile</Link>
+              <Link
+                to="/submit"
+                onClick={() => setMenuOpen(false)}
+                className="mt-1 rounded-lg bg-blue-600 px-3 py-2 text-center font-semibold text-white"
+              >
+                Submit Website
+              </Link>
+            </nav>
+          </div>
+        )}
       </header>
 
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-6 px-4 py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-6">
@@ -224,22 +268,22 @@ function OneWebsHome() {
         {/* Main */}
         <main className="min-w-0 space-y-8">
           {/* Hero */}
-          <section className="relative overflow-hidden rounded-3xl border border-slate-100 bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-100 p-6 sm:p-10">
+          <section className="relative overflow-hidden rounded-3xl border border-slate-100 bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-100 p-5 sm:p-10">
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
               <div className="min-w-0">
-                <span className="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/70 px-3 py-1 text-xs font-medium text-blue-700 backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/70 px-3 py-1 text-[11px] font-medium text-blue-700 backdrop-blur sm:text-xs">
                   <Sparkles className="h-3.5 w-3.5" /> One Place. Every Website.
                 </span>
-                <h1 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-                  Discover the Best Websites
+                <h1 className="mt-4 text-[28px] font-black leading-[1.1] tracking-tight text-slate-900 sm:mt-5 sm:text-5xl lg:text-6xl">
+                  Discover the Best Websites{" "}
                   <br className="hidden sm:block" />
                   in <span className="text-blue-600">One Place</span>
                 </h1>
-                <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 sm:mt-4 sm:text-base">
                   Find AI tools, learning platforms, productivity apps, shopping sites, entertainment, and thousands more — all organized by category.
                 </p>
 
-                <div className="mt-6 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+                <div className="mt-5 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:mt-6">
                   <div className="flex min-w-0 flex-1 items-center gap-2 px-3">
                     <Search className="h-4 w-4 shrink-0 text-slate-400" />
                     <input
@@ -249,12 +293,12 @@ function OneWebsHome() {
                       className="w-full min-w-0 bg-transparent py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400"
                     />
                   </div>
-                  <button className="shrink-0 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-blue-700">
+                  <button className="shrink-0 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-blue-700 sm:px-5">
                     Search
                   </button>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2 sm:mt-6">
                   <HeroChip icon={LayoutGrid} label="100+ Categories" />
                   <HeroChip icon={Globe} label="1000+ Websites" />
                   <HeroChip icon={Sparkles} label="100% Free" color="text-emerald-600" />
@@ -275,52 +319,52 @@ function OneWebsHome() {
               <a
                 key={c.id}
                 href={`#cat-${c.id}`}
-                className={`group flex items-center gap-3 rounded-2xl border border-slate-100 ${c.tint} p-4 transition hover:-translate-y-0.5 hover:shadow-md`}
+                className={`group flex items-center gap-2.5 rounded-2xl border border-slate-100 ${c.tint} p-3 transition hover:-translate-y-0.5 hover:shadow-md sm:gap-3 sm:p-4`}
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/70 shadow-sm">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/70 shadow-sm sm:h-10 sm:w-10">
                   <c.icon className={`h-5 w-5 ${c.iconColor}`} />
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold text-slate-900">{c.name}</span>
-                  <span className="text-xs text-slate-500">{counts[c.id] ?? 0} Websites</span>
+                  <span className="block text-[13px] font-semibold leading-tight text-slate-900 sm:text-sm">{c.name}</span>
+                  <span className="text-[11px] text-slate-500 sm:text-xs">{counts[c.id] ?? 0} Websites</span>
                 </span>
               </a>
             ))}
-            <a href="#categories" className="flex items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-100">
+            <a href="#categories" className="flex items-center gap-2.5 rounded-2xl border border-dashed border-slate-200 bg-white p-3 transition hover:border-slate-300 hover:shadow-sm sm:gap-3 sm:p-4">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-100 sm:h-10 sm:w-10">
                 <LayoutGrid className="h-5 w-5 text-slate-500" />
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-semibold text-slate-900">More</span>
-                <span className="text-xs text-slate-500">Categories</span>
+                <span className="block text-[13px] font-semibold text-slate-900 sm:text-sm">More</span>
+                <span className="text-[11px] text-slate-500 sm:text-xs">Categories</span>
               </span>
             </a>
           </section>
 
           {/* Popular */}
           <section id="popular">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:items-end sm:gap-4">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-orange-100">
                     <Flame className="h-4 w-4 text-orange-500" />
                   </span>
-                  <h2 className="truncate text-xl font-bold text-slate-900 sm:text-2xl">Popular Websites</h2>
+                  <h2 className="truncate text-lg font-bold text-slate-900 sm:text-2xl">Popular Websites</h2>
                 </div>
-                <p className="mt-1 text-sm text-slate-500">Most popular and useful websites handpicked for you</p>
+                <p className="mt-1 text-xs text-slate-500 sm:text-sm">Most popular and useful websites handpicked for you</p>
               </div>
-              <button className="shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
+              <button className="mt-1 shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
                 View All
               </button>
             </div>
 
-            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:mt-5">
+              <div className="flex min-w-0 items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
                 {(["All", "Free", "Freemium", "Paid", "Popular", "New"] as Filter[]).map((f) => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                       filter === f
                         ? "bg-blue-600 text-white shadow-sm"
                         : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"

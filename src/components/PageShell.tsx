@@ -16,12 +16,12 @@ export function PageShell({
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
               <Globe className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight">
+            <span className="truncate text-lg font-bold tracking-tight sm:text-xl">
               One<span className="text-blue-600">Webs</span>
             </span>
           </Link>
@@ -34,14 +34,22 @@ export function PageShell({
           </nav>
           <Link
             to="/submit"
-            className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:px-4 sm:py-2 sm:text-sm"
+            className="shrink-0 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:px-4 sm:py-2 sm:text-sm"
           >
             Submit Website
           </Link>
         </div>
+        <div className="flex items-center gap-4 overflow-x-auto border-t border-slate-100 px-4 py-2 text-xs text-slate-600 md:hidden">
+          <Link to="/" className="shrink-0 hover:text-slate-900">Home</Link>
+          <Link to="/categories" className="shrink-0 hover:text-slate-900">Categories</Link>
+          <Link to="/trending" className="shrink-0 hover:text-slate-900">Trending</Link>
+          <Link to="/new" className="shrink-0 hover:text-slate-900">New</Link>
+          <Link to="/about" className="shrink-0 hover:text-slate-900">About</Link>
+          <Link to="/contact" className="shrink-0 hover:text-slate-900">Contact</Link>
+        </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 pb-16 pt-10 sm:px-6">
+      <main className="mx-auto max-w-3xl px-4 pb-16 pt-8 sm:px-6 sm:pt-10">
         <Link
           to="/"
           className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
@@ -53,7 +61,7 @@ export function PageShell({
             {kicker}
           </div>
         )}
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">
           {title}
         </h1>
         {intro && <p className="mt-3 text-base text-slate-600">{intro}</p>}
