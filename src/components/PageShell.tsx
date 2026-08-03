@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Globe, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { SiteFooter } from "./SiteFooter";
+import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export function PageShell({
   title,
@@ -18,9 +19,11 @@ export function PageShell({
       <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
-              <Globe className="h-5 w-5" />
-            </div>
+            <img
+              src={onewebsMark.url}
+              alt="OneWebs logo"
+              className="ow-logo h-9 w-9 shrink-0 rounded-full object-cover shadow-md"
+            />
             <span className="truncate text-lg font-bold tracking-tight sm:text-xl">
               One<span className="text-blue-600">Webs</span>
             </span>
@@ -61,7 +64,7 @@ export function PageShell({
             {kicker}
           </div>
         )}
-        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">
+        <h1 className="ow-fade-up mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">
           {title}
         </h1>
         {intro && <p className="mt-3 text-base text-slate-600">{intro}</p>}
