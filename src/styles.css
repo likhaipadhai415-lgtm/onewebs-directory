@@ -181,9 +181,7 @@
 .ow-card {
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
-.ow-card:hover { transform: translateY(-4px) scale(1.01); }
 .ow-logo { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease; }
-.ow-logo:hover { transform: rotate(-6deg) scale(1.08); filter: drop-shadow(0 6px 14px rgb(37 99 235 / 0.35)); }
 .ow-gradient-text {
   background: linear-gradient(90deg, #2563eb, #38bdf8, #6366f1, #2563eb);
   background-size: 200% auto;
@@ -192,7 +190,41 @@
   color: transparent;
   animation: ow-shimmer 6s linear infinite;
 }
+
+/* Hover effects only on devices with a real pointer (no sticky hover / jank on touch) */
+@media (hover: hover) and (pointer: fine) {
+  .ow-card:hover { transform: translateY(-4px) scale(1.01); }
+  .ow-logo:hover { transform: rotate(-6deg) scale(1.08); filter: drop-shadow(0 6px 14px rgb(37 99 235 / 0.35)); }
+}
+
+/* Touch feedback instead of hover: cheap, composited, instant */
+@media (hover: none) {
+  .ow-card:active { transform: scale(0.985); }
+  .ow-card { transition: transform 0.15s ease-out, box-shadow 0.15s ease; }
+}
+
+/* Mobile / low-end: lighter, shorter, GPU-friendly motion */
+@media (max-width: 768px) {
+  .ow-fade-up { animation-duration: 0.32s; }
+  .ow-pop { animation-duration: 0.22s; }
+  /* infinite animations are the main battery/jank cost on phones */
+  .ow-float { animation: none; }
+  .ow-gradient-text {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ow-fade-up, .ow-pop, .ow-float, .ow-gradient-text { animation: none !important; }
-  .ow-card:hover { transform: none; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ow-fade-up, .ow-pop, .ow-float, .ow-gradient-text { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .ow-card, .ow-logo { transition: none !important; }
+  .ow-card:hover, .ow-card:active, .ow-logo:hover { transform: none !important; filter: none !important; }
 }
