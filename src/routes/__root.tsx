@@ -11,7 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import onewebsLogo from "../assets/onewebs-logo.png.asset.json";
+import onewebsLogo from "../assets/onewebs-mark.png.asset.json";
 import { ClientOnly } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";

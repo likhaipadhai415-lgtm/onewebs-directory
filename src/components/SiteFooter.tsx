@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Globe } from "lucide-react";
+import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -8,9 +8,11 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1600px] gap-8 px-4 py-10 sm:px-6 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
-              <Globe className="h-5 w-5" />
-            </div>
+            <img
+              src={onewebsMark.url}
+              alt="OneWebs logo"
+              className="ow-logo h-9 w-9 rounded-full object-cover shadow-md"
+            />
             <span className="text-lg font-bold tracking-tight">
               One<span className="text-blue-600">Webs</span>
             </span>

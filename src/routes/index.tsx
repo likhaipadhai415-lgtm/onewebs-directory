@@ -11,6 +11,7 @@ import {
 import { SiteFooter } from "@/components/SiteFooter";
 import { Highlight, tokenize } from "@/components/Highlight";
 import { useApprovedSites } from "@/hooks/use-approved-sites";
+import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -132,9 +133,11 @@ function OneWebsHome() {
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:gap-4 sm:px-6">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
-              <Globe className="h-5 w-5" />
-            </div>
+            <img
+              src={onewebsMark.url}
+              alt="OneWebs logo"
+              className="ow-logo h-9 w-9 shrink-0 rounded-full object-cover shadow-md"
+            />
             <span className="truncate text-xl font-bold tracking-tight">
               One<span className="text-blue-600">Webs</span>
             </span>
@@ -186,7 +189,7 @@ function OneWebsHome() {
           </div>
         </div>
 
-        {/* Mobile search */}
+        {/* Mobile search (sticky with header) */}
         <div className="px-4 pb-3 sm:hidden">
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm text-slate-500 focus-within:border-blue-300 focus-within:bg-white">
             <Search className="h-4 w-4 shrink-0" />
@@ -274,16 +277,16 @@ function OneWebsHome() {
                 <span className="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/70 px-3 py-1 text-[11px] font-medium text-blue-700 backdrop-blur sm:text-xs">
                   <Sparkles className="h-3.5 w-3.5" /> One Place. Every Website.
                 </span>
-                <h1 className="mt-4 text-[28px] font-black leading-[1.1] tracking-tight text-slate-900 sm:mt-5 sm:text-5xl lg:text-6xl">
+                <h1 className="ow-fade-up mt-4 text-[28px] font-black leading-[1.1] tracking-tight text-slate-900 sm:mt-5 sm:text-5xl lg:text-6xl">
                   Discover the Best Websites{" "}
                   <br className="hidden sm:block" />
-                  in <span className="text-blue-600">One Place</span>
+                  in <span className="ow-gradient-text">One Place</span>
                 </h1>
-                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 sm:mt-4 sm:text-base">
+                <p className="ow-fade-up mt-3 max-w-xl text-sm leading-relaxed text-slate-600 [animation-delay:80ms] sm:mt-4 sm:text-base">
                   Find AI tools, learning platforms, productivity apps, shopping sites, entertainment, and thousands more — all organized by category.
                 </p>
 
-                <div className="mt-5 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:mt-6">
+                <div className="ow-fade-up mt-5 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition focus-within:shadow-lg focus-within:ring-2 focus-within:ring-blue-100 [animation-delay:140ms] sm:mt-6">
                   <div className="flex min-w-0 flex-1 items-center gap-2 px-3">
                     <Search className="h-4 w-4 shrink-0 text-slate-400" />
                     <input
@@ -293,12 +296,12 @@ function OneWebsHome() {
                       className="w-full min-w-0 bg-transparent py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400"
                     />
                   </div>
-                  <button className="shrink-0 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-blue-700 sm:px-5">
+                  <button className="shrink-0 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg active:translate-y-0 sm:px-5">
                     Search
                   </button>
                 </div>
 
-                <div className="mt-5 flex flex-wrap gap-2 sm:mt-6">
+                <div className="ow-fade-up mt-5 flex flex-wrap gap-2 [animation-delay:200ms] sm:mt-6">
                   <HeroChip icon={LayoutGrid} label="100+ Categories" />
                   <HeroChip icon={Globe} label="1000+ Websites" />
                   <HeroChip icon={Sparkles} label="100% Free" color="text-emerald-600" />
@@ -307,7 +310,7 @@ function OneWebsHome() {
               </div>
 
               {/* Decorative icon grid */}
-              <div className="hidden lg:block">
+              <div className="ow-float hidden lg:block">
                 <HeroIconGrid />
               </div>
             </div>
@@ -564,7 +567,7 @@ function WebsiteCard({
   }
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-lg">
+    <div className="ow-card ow-pop group flex flex-col rounded-2xl border border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-xl">
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
         <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
           {!imgError ? (
