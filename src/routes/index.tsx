@@ -132,9 +132,11 @@ function OneWebsHome() {
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:gap-4 sm:px-6">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
-              <Globe className="h-5 w-5" />
-            </div>
+            <img
+              src={onewebsMark.url}
+              alt="OneWebs logo"
+              className="ow-logo h-9 w-9 shrink-0 rounded-full object-cover shadow-md"
+            />
             <span className="truncate text-xl font-bold tracking-tight">
               One<span className="text-blue-600">Webs</span>
             </span>
@@ -186,7 +188,7 @@ function OneWebsHome() {
           </div>
         </div>
 
-        {/* Mobile search */}
+        {/* Mobile search (sticky with header) */}
         <div className="px-4 pb-3 sm:hidden">
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm text-slate-500 focus-within:border-blue-300 focus-within:bg-white">
             <Search className="h-4 w-4 shrink-0" />
