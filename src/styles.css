@@ -156,3 +156,43 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+/* ---- OneWebs motion ---- */
+@keyframes ow-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ow-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes ow-pop {
+  0% { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes ow-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.ow-fade-up { animation: ow-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ow-pop { animation: ow-pop 0.35s ease-out both; }
+.ow-float { animation: ow-float 6s ease-in-out infinite; }
+.ow-card {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.ow-card:hover { transform: translateY(-4px) scale(1.01); }
+.ow-logo { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease; }
+.ow-logo:hover { transform: rotate(-6deg) scale(1.08); filter: drop-shadow(0 6px 14px rgb(37 99 235 / 0.35)); }
+.ow-gradient-text {
+  background: linear-gradient(90deg, #2563eb, #38bdf8, #6366f1, #2563eb);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ow-shimmer 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ow-fade-up, .ow-pop, .ow-float, .ow-gradient-text { animation: none !important; }
+  .ow-card:hover { transform: none; }
+}
