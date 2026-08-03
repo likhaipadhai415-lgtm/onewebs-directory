@@ -567,7 +567,7 @@ function WebsiteCard({
   }
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-lg">
+    <div className="ow-card ow-pop group flex flex-col rounded-2xl border border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-xl">
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
         <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
           {!imgError ? (
