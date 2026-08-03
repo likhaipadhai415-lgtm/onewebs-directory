@@ -11,6 +11,7 @@ import {
 import { SiteFooter } from "@/components/SiteFooter";
 import { Highlight, tokenize } from "@/components/Highlight";
 import { useApprovedSites } from "@/hooks/use-approved-sites";
+import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
