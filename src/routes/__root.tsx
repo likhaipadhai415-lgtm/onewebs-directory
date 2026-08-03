@@ -16,6 +16,7 @@ import { ClientOnly } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SubmissionNotifier } from "@/components/SubmissionNotifier";
+import { PerfMonitor } from "@/components/PerfMonitor";
 
 const SITE_URL = "https://find-best-sites.lovable.app";
 const LOGO_URL = `${SITE_URL}${onewebsLogo.url}`;
@@ -141,6 +142,7 @@ function RootComponent() {
       <ClientOnly fallback={null}>
         <SubmissionNotifier />
         <CookieConsent />
+        <PerfMonitor />
         <Toaster position="top-right" richColors closeButton />
       </ClientOnly>
     </QueryClientProvider>
