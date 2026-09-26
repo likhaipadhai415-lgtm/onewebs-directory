@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
-  Search, Command, Home, LayoutGrid, TrendingUp, Sparkles, Heart, Clock,
-  Flame, ExternalLink, Share2, ChevronRight, Moon, User, Globe, Info, Menu, X,
+  Search, Heart, ExternalLink, Share2, ChevronRight, User, Info, Menu, X,
 } from "lucide-react";
 import {
   categories, websites, categoryById, faviconFor,
@@ -334,7 +333,7 @@ function WebsiteCard({
   }
 
   return (
-    <div className="ow-card ow-pop group flex flex-col rounded-2xl border border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-xl">
+    <div className="ow-card ow-pop group flex flex-col rounded-3xl border border-slate-200 bg-white p-5 hover:border-blue-300 hover:shadow-[0_10px_40px_-12px_rgb(37_99_235/0.25)]">
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
         <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
           {!imgError ? (
@@ -382,7 +381,7 @@ function WebsiteCard({
             href={normalizedUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition duration-200 hover:scale-105 hover:from-blue-700 hover:to-indigo-700"
+            className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-full bg-slate-900 px-3 py-2 text-xs font-medium text-white transition hover:bg-blue-600"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             <span className="truncate">Open Website</span>
