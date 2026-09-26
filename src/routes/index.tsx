@@ -124,407 +124,174 @@ function OneWebsHome() {
     }
   };
 
-  const topSidebarCats = categories.slice(0, 7);
+  const featured = allSites.filter((w) => w.popular).slice(0, 3);
+  const bentoCats = categories.slice(0, 6);
+  const navCls = "text-slate-600 transition hover:text-slate-900";
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">
-      {/* Top bar */}
-      <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:grid-cols-[240px_minmax(0,1fr)_auto] sm:gap-4 sm:px-6">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <img
-              src={onewebsMark.url}
-              alt="OneWebs logo"
-              className="ow-logo h-9 w-9 shrink-0 rounded-full object-cover shadow-md"
-            />
-            <span className="truncate text-xl font-bold tracking-tight">
-              One<span className="text-blue-600">Webs</span>
+      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          <Link to="/" className="flex items-center gap-2">
+            <img src={onewebsMark.url} alt="OneWebs logo" className="ow-logo h-8 w-8 shrink-0 rounded-full object-cover" />
+            <span className="font-display text-2xl leading-none">
+              One<span className="italic text-blue-600">Webs</span>
             </span>
-          </a>
-
-          {/* Search (desktop) */}
-          <div className="hidden sm:block">
-            <div className="mx-auto flex max-w-xl items-center gap-2 rounded-full border border-slate-200 bg-slate-50/70 px-4 py-2 text-sm text-slate-500 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100">
-              <Search className="h-4 w-4" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search websites, categories, tools..."
-                className="min-w-0 flex-1 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
-              />
-              <span className="flex shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[11px] font-medium text-slate-500">
-                <Command className="h-3 w-3" /> /
-              </span>
-            </div>
-          </div>
-
-          {/* Right */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            <nav className="hidden items-center gap-6 text-sm text-slate-600 lg:flex">
-              <Link to="/" className="hover:text-slate-900">Home</Link>
-              <Link to="/categories" className="hover:text-slate-900">Categories</Link>
-              <Link to="/trending" className="hover:text-slate-900">Trending</Link>
-              <Link to="/new" className="hover:text-slate-900">New</Link>
-              <Link to="/about" className="hover:text-slate-900">About</Link>
-            </nav>
-            <Link to="/submit" className="hidden rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 md:inline-flex">
-              Submit Website
-            </Link>
-            <button aria-label="Theme" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
-              <Moon className="h-4 w-4" />
-            </button>
-            <Link to="/profile" aria-label="Account" className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 sm:inline-flex">
+          </Link>
+          <nav className="hidden items-center gap-7 text-sm lg:flex">
+            <Link to="/categories" className={navCls}>Categories</Link>
+            <Link to="/trending" className={navCls}>Trending</Link>
+            <Link to="/new" className={navCls}>New</Link>
+            <Link to="/about" className={navCls}>About</Link>
+          </nav>
+          <div className="flex items-center gap-2">
+            <Link to="/profile" aria-label="Account" className="hidden h-9 w-9 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 sm:grid">
               <User className="h-4 w-4" />
             </Link>
-            <button
-              onClick={() => setMenuOpen((v) => !v)}
-              aria-label="Menu"
-              aria-expanded={menuOpen}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-600 lg:hidden"
-            >
+            <Link to="/submit" className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-600 md:inline-flex">
+              Submit a site
+            </Link>
+            <button onClick={() => setMenuOpen((v) => !v)} aria-label="Menu" aria-expanded={menuOpen}
+              className="grid h-9 w-9 place-items-center rounded-full border border-slate-200 text-slate-600 lg:hidden">
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
-
-        {/* Mobile search (sticky with header) */}
-        <div className="px-4 pb-3 sm:hidden">
-          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm text-slate-500 focus-within:border-blue-300 focus-within:bg-white">
-            <Search className="h-4 w-4 shrink-0" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search websites, categories..."
-              className="min-w-0 flex-1 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
-            />
-          </div>
-        </div>
-
-        {/* Mobile menu */}
         {menuOpen && (
-          <div className="border-t border-slate-100 bg-white px-4 py-3 lg:hidden">
-            <nav className="grid gap-1 text-sm font-medium text-slate-700">
-              <Link to="/" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Home</Link>
-              <Link to="/categories" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Categories</Link>
-              <Link to="/trending" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Trending</Link>
-              <Link to="/new" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">New Websites</Link>
-              <Link to="/about" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">About</Link>
-              <Link to="/profile" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">Profile</Link>
-              <Link
-                to="/submit"
-                onClick={() => setMenuOpen(false)}
-                className="mt-1 rounded-lg bg-blue-600 px-3 py-2 text-center font-semibold text-white"
-              >
-                Submit Website
-              </Link>
-            </nav>
-          </div>
+          <nav className="grid gap-1 border-t border-slate-100 px-4 py-3 text-sm font-medium text-slate-700 lg:hidden">
+            {([["/categories","Categories"],["/trending","Trending"],["/new","New Websites"],["/about","About"],["/profile","Profile"]] as const).map(([to, label]) => (
+              <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">{label}</Link>
+            ))}
+            <Link to="/submit" onClick={() => setMenuOpen(false)} className="mt-1 rounded-full bg-slate-900 px-3 py-2 text-center text-white">Submit a site</Link>
+          </nav>
         )}
       </header>
 
-      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-6 px-4 py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-6">
-        {/* Sidebar */}
-        <aside className="hidden lg:block">
-          <nav className="space-y-1">
-            <SidebarItem icon={Home} label="Home" active />
-            <SidebarItem icon={LayoutGrid} label="Categories" />
-            <SidebarItem icon={TrendingUp} label="Trending" />
-            <SidebarItem icon={Sparkles} label="New Websites" />
-            <SidebarItem icon={Heart} label="Favorites" badge={favorites.size || undefined} />
-            <SidebarItem icon={Clock} label="Recently Viewed" />
-          </nav>
-
-          <div className="mt-8">
-            <div className="px-3 text-[11px] font-semibold tracking-widest text-slate-400">TOP CATEGORIES</div>
-            <div className="mt-2 space-y-1">
-              {topSidebarCats.map((c) => (
-                <a
-                  key={c.id}
-                  href={`#cat-${c.id}`}
-                  className="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  <span className="flex min-w-0 items-center gap-3">
-                    <c.icon className={`h-4 w-4 shrink-0 ${c.iconColor}`} />
-                    <span className="truncate">{c.name}</span>
-                  </span>
-                  <span className="shrink-0 text-xs text-slate-400">{counts[c.id] ?? 0}</span>
-                </a>
-              ))}
-              <a href="#categories" className="block px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-700">
-                View All Categories
-              </a>
+      <main className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Hero */}
+        <section className="pb-10 pt-12 text-center sm:pb-14 sm:pt-20">
+          <p className="ow-fade-up text-xs font-medium uppercase tracking-[0.2em] text-blue-600">One place · Every website</p>
+          <h1 className="ow-fade-up mx-auto mt-4 max-w-3xl font-display text-[44px] leading-[1.02] tracking-tight [animation-delay:60ms] sm:text-7xl">
+            The web's best sites, <span className="italic text-blue-600">beautifully</span> organized.
+          </h1>
+          <p className="ow-fade-up mx-auto mt-5 max-w-xl text-base text-slate-600 [animation-delay:120ms]">
+            A handpicked directory of AI tools, learning platforms, productivity apps and more — no endless Googling.
+          </p>
+          <div className="ow-fade-up sticky top-[64px] z-30 mx-auto mt-8 max-w-xl [animation-delay:180ms]">
+            <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-5 py-3 shadow-[0_10px_40px_-12px_rgb(37_99_235/0.25)] focus-within:border-blue-400">
+              <Search className="h-5 w-5 shrink-0 text-slate-400" />
+              <input value={query} onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search websites, categories, tools…"
+                className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-slate-400" />
+              {query && <button onClick={() => setQuery("")} aria-label="Clear"><X className="h-4 w-4 text-slate-400" /></button>}
             </div>
           </div>
+        </section>
 
-          <div className="mt-8 rounded-2xl bg-gradient-to-br from-indigo-900 to-blue-900 p-5 text-center text-white">
-            <div className="text-sm font-semibold">Discover. Explore. Save.</div>
-            <p className="mt-2 text-xs text-white/70">One place for all the best websites in the world.</p>
-            <button className="mt-4 w-full rounded-lg bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50">
-              Explore Now
-            </button>
-          </div>
-        </aside>
-
-        {/* Main */}
-        <main className="min-w-0 space-y-8">
-          {/* Hero */}
-          <section className="relative overflow-hidden rounded-3xl border border-slate-100 bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-100 p-5 sm:p-10">
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-              <div className="min-w-0">
-                <span className="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/70 px-3 py-1 text-[11px] font-medium text-blue-700 backdrop-blur sm:text-xs">
-                  <Sparkles className="h-3.5 w-3.5" /> One Place. Every Website.
-                </span>
-                <h1 className="ow-fade-up mt-4 text-[28px] font-black leading-[1.1] tracking-tight text-slate-900 sm:mt-5 sm:text-5xl lg:text-6xl">
-                  Discover the Best Websites{" "}
-                  <br className="hidden sm:block" />
-                  in <span className="ow-gradient-text">One Place</span>
-                </h1>
-                <p className="ow-fade-up mt-3 max-w-xl text-sm leading-relaxed text-slate-600 [animation-delay:80ms] sm:mt-4 sm:text-base">
-                  Find AI tools, learning platforms, productivity apps, shopping sites, entertainment, and thousands more — all organized by category.
-                </p>
-
-                <div className="ow-fade-up mt-5 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition focus-within:shadow-lg focus-within:ring-2 focus-within:ring-blue-100 [animation-delay:140ms] sm:mt-6">
-                  <div className="flex min-w-0 flex-1 items-center gap-2 px-3">
-                    <Search className="h-4 w-4 shrink-0 text-slate-400" />
-                    <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search websites..."
-                      className="w-full min-w-0 bg-transparent py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400"
-                    />
-                  </div>
-                  <button className="shrink-0 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg active:translate-y-0 sm:px-5">
-                    Search
-                  </button>
-                </div>
-
-                <div className="ow-fade-up mt-5 flex flex-wrap gap-2 [animation-delay:200ms] sm:mt-6">
-                  <HeroChip icon={LayoutGrid} label="100+ Categories" />
-                  <HeroChip icon={Globe} label="1000+ Websites" />
-                  <HeroChip icon={Sparkles} label="100% Free" color="text-emerald-600" />
-                  <HeroChip icon={Clock} label="Daily Updates" color="text-violet-600" />
-                </div>
+        {/* Bento */}
+        {!isSearching && (
+          <section id="categories" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-[auto_auto_auto]">
+            <div className="col-span-2 row-span-2 flex flex-col justify-between rounded-3xl bg-slate-900 p-6 text-white sm:p-8">
+              <div>
+                <span className="text-xs uppercase tracking-[0.2em] text-blue-300">Editor's picks</span>
+                <h2 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">Start with the <span className="italic">essentials</span>.</h2>
               </div>
-
-              {/* Decorative icon grid */}
-              <div className="ow-float hidden lg:block">
-                <HeroIconGrid />
-              </div>
-            </div>
-          </section>
-
-          {/* Category quick strip */}
-          <section id="categories" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7">
-            {categories.slice(0, 6).map((c) => (
-              <a
-                key={c.id}
-                href={`#cat-${c.id}`}
-                className={`group flex items-center gap-2.5 rounded-2xl border border-slate-100 ${c.tint} p-3 transition hover:-translate-y-0.5 hover:shadow-md sm:gap-3 sm:p-4`}
-              >
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/70 shadow-sm sm:h-10 sm:w-10">
-                  <c.icon className={`h-5 w-5 ${c.iconColor}`} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[13px] font-semibold leading-tight text-slate-900 sm:text-sm">{c.name}</span>
-                  <span className="text-[11px] text-slate-500 sm:text-xs">{counts[c.id] ?? 0} Websites</span>
-                </span>
-              </a>
-            ))}
-            <a href="#categories" className="flex items-center gap-2.5 rounded-2xl border border-dashed border-slate-200 bg-white p-3 transition hover:border-slate-300 hover:shadow-sm sm:gap-3 sm:p-4">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-100 sm:h-10 sm:w-10">
-                <LayoutGrid className="h-5 w-5 text-slate-500" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-[13px] font-semibold text-slate-900 sm:text-sm">More</span>
-                <span className="text-[11px] text-slate-500 sm:text-xs">Categories</span>
-              </span>
-            </a>
-          </section>
-
-          {/* Popular */}
-          <section id="popular">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:items-end sm:gap-4">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-orange-100">
-                    <Flame className="h-4 w-4 text-orange-500" />
-                  </span>
-                  <h2 className="truncate text-lg font-bold text-slate-900 sm:text-2xl">Popular Websites</h2>
-                </div>
-                <p className="mt-1 text-xs text-slate-500 sm:text-sm">Most popular and useful websites handpicked for you</p>
-              </div>
-              <button className="mt-1 shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
-                View All
-              </button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:mt-5">
-              <div className="flex min-w-0 items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
-                {(["All", "Free", "Freemium", "Paid", "Popular", "New"] as Filter[]).map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                      filter === f
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                    }`}
-                  >
-                    {f}
-                  </button>
+              <div className="mt-8 space-y-2">
+                {featured.map((s) => (
+                  <a key={s.name} href={s.url.startsWith("http") ? s.url : `https://${s.url}`} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-3 rounded-2xl bg-white/5 p-3 transition hover:bg-white/10">
+                    <img src={s.logoUrl ?? faviconFor(s.domain)} alt="" className="h-9 w-9 rounded-lg bg-white p-1" loading="lazy" />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-medium">{s.name}</div>
+                      <div className="truncate text-xs text-white/60">{s.description}</div>
+                    </div>
+                    <ExternalLink className="h-4 w-4 text-white/50" />
+                  </a>
                 ))}
               </div>
-              <div className="hidden shrink-0 text-xs text-slate-500 sm:block">
-                Sort by: <span className="font-medium text-slate-700">{isSearching ? "Relevance" : "Popular"}</span>
-                <button
-                  onClick={() => setShowRankInfo((v) => !v)}
-                  className="ml-2 inline-flex items-center gap-1 text-slate-400 hover:text-slate-600"
-                  aria-label="How ranking works"
-                >
+            </div>
+            {bentoCats.map((c, i) => (
+              <a key={c.id} href={`#cat-${c.id}`}
+                className={`ow-card group flex flex-col justify-between rounded-3xl border border-slate-200 p-5 hover:border-blue-300 ${i === 0 ? "bg-blue-50" : "bg-white"} ${i === 4 ? "lg:col-span-2" : ""}`}>
+                <c.icon className={`h-6 w-6 ${c.iconColor}`} />
+                <div className="mt-8">
+                  <div className="font-display text-2xl leading-tight">{c.name}</div>
+                  <div className="mt-1 flex items-center justify-between text-xs text-slate-500">
+                    {counts[c.id] ?? 0} websites
+                    <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </a>
+            ))}
+            <Link to="/categories" className="col-span-2 flex items-center justify-between rounded-3xl border border-dashed border-slate-300 p-5 text-sm font-medium text-slate-600 hover:border-blue-400 hover:text-blue-600 lg:col-span-4">
+              Browse all {categories.length} categories <ChevronRight className="h-4 w-4" />
+            </Link>
+          </section>
+        )}
+
+        {/* Results */}
+        <section id="popular" className="mt-16">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <h2 className="font-display text-4xl">{isSearching ? "Results" : "Popular right now"}</h2>
+              <p className="mt-1 text-sm text-slate-500">
+                {isSearching ? `${filtered.length} matches, ranked by relevance` : "The most useful sites, handpicked."}
+                <button onClick={() => setShowRankInfo((v) => !v)} className="ml-2 inline-flex align-middle text-slate-400 hover:text-slate-700" aria-label="How ranking works">
                   <Info className="h-3.5 w-3.5" />
                 </button>
-              </div>
+              </p>
             </div>
-
-            {showRankInfo && (
-              <div className="mt-3 rounded-2xl border border-blue-100 bg-blue-50/60 p-4 text-xs leading-relaxed text-slate-700">
-                <div className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Info className="h-4 w-4 text-blue-600" /> How results are ranked
-                </div>
-                {isSearching ? (
-                  <>Every result must match all of your terms. Points are added for
-                  where the match happens:</>
-                ) : (
-                  <>Type a term above to rank by relevance. Without a query, sites
-                  are ordered by category and popularity.</>
-                )}
-                <ul className="mt-2 grid gap-1 sm:grid-cols-2">
-                  <li>• Exact name match — <strong>+100</strong></li>
-                  <li>• Name starts with term — <strong>+60</strong></li>
-                  <li>• Name contains term — <strong>+40</strong></li>
-                  <li>• Exact category / tag — <strong>+50</strong></li>
-                  <li>• Category contains term — <strong>+25</strong></li>
-                  <li>• Domain contains term — <strong>+20</strong></li>
-                  <li>• Description contains term — <strong>+10</strong></li>
-                  <li>• Popular pick bonus — <strong>+5</strong>, new — <strong>+3</strong></li>
-                </ul>
-              </div>
-            )}
-
-            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-              {filtered.slice(0, 20).map((site) => (
-                <WebsiteCard
-                  key={site.name}
-                  site={site}
-                  tokens={tokens}
-                  isFav={favorites.has(site.name)}
-                  onToggleFav={() => toggleFav(site.name)}
-                  onShare={() => share(site)}
-                />
+            <div className="flex max-w-full gap-1 overflow-x-auto rounded-full bg-slate-100 p-1">
+              {(["All", "Free", "Freemium", "Paid", "Popular", "New"] as Filter[]).map((f) => (
+                <button key={f} onClick={() => setFilter(f)}
+                  className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition ${filter === f ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}>
+                  {f}
+                </button>
               ))}
             </div>
-            {filtered.length === 0 && (
-              <div className="mt-6 rounded-2xl border border-dashed border-slate-200 p-10 text-center text-sm text-slate-500">
-                No websites match your search.
-              </div>
-            )}
-          </section>
-
-          {/* All categories with sections */}
-          {categories.map((c) => {
-            const items = filtered.filter((w) => w.category === c.id);
-            if (items.length === 0) return null;
-            return (
-              <section key={c.id} id={`cat-${c.id}`}>
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${c.tint}`}>
-                      <c.icon className={`h-5 w-5 ${c.iconColor}`} />
-                    </span>
-                    <h3 className="truncate text-lg font-bold text-slate-900">{c.name}</h3>
-                    <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
-                      {counts[c.id]}
-                    </span>
-                  </div>
-                  <a href="#" className="shrink-0 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
-                    View all <ChevronRight className="h-3 w-3" />
-                  </a>
-                </div>
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                  {items.map((site) => (
-                    <WebsiteCard
-                      key={site.name}
-                      site={site}
-                      tokens={tokens}
-                      isFav={favorites.has(site.name)}
-                      onToggleFav={() => toggleFav(site.name)}
-                      onShare={() => share(site)}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </main>
-      </div>
-      <SiteFooter />
-    </div>
-  );
-}
-
-function SidebarItem({
-  icon: Icon, label, active, badge,
-}: { icon: React.ComponentType<{ className?: string }>; label: string; active?: boolean; badge?: number }) {
-  return (
-    <a
-      href="#"
-      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-        active
-          ? "bg-blue-50 text-blue-700"
-          : "text-slate-700 hover:bg-slate-50"
-      }`}
-    >
-      <span className="flex min-w-0 items-center gap-3">
-        <Icon className="h-4 w-4 shrink-0" />
-        <span className="truncate">{label}</span>
-      </span>
-      {badge ? (
-        <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-semibold text-white">{badge}</span>
-      ) : null}
-    </a>
-  );
-}
-
-function HeroChip({
-  icon: Icon, label, color = "text-blue-600",
-}: { icon: React.ComponentType<{ className?: string }>; label: string; color?: string }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/70 px-3 py-1.5 text-xs font-medium text-slate-700 backdrop-blur">
-      <Icon className={`h-3.5 w-3.5 ${color}`} /> {label}
-    </span>
-  );
-}
-
-function HeroIconGrid() {
-  const cats = categories.slice(0, 18);
-  return (
-    <div className="relative w-[380px] rounded-2xl border border-white/60 bg-white/80 p-4 shadow-xl backdrop-blur">
-      <div className="flex items-center gap-1.5 pb-3">
-        <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-        <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-        <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-        <span className="ml-3 text-xs font-semibold text-slate-500">OneWebs</span>
-      </div>
-      <div className="grid grid-cols-6 gap-3">
-        {cats.map((c) => (
-          <div key={c.id} className={`grid aspect-square place-items-center rounded-xl ${c.tint}`}>
-            <c.icon className={`h-5 w-5 ${c.iconColor}`} />
           </div>
-        ))}
-      </div>
+
+          {showRankInfo && (
+            <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-700">
+              <div className="mb-1 font-semibold text-slate-900">How results are ranked</div>
+              Every result must match all your terms. Exact name +100 · name starts +60 · exact category +50 · name contains +40 · category contains +25 · domain +20 · description +10 · popular +5 · new +3.
+            </div>
+          )}
+
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.slice(0, isSearching ? 60 : 12).map((site) => (
+              <WebsiteCard key={site.name} site={site} tokens={tokens} isFav={favorites.has(site.name)}
+                onToggleFav={() => toggleFav(site.name)} onShare={() => share(site)} />
+            ))}
+          </div>
+          {filtered.length === 0 && (
+            <div className="mt-6 rounded-3xl border border-dashed border-slate-200 p-12 text-center text-sm text-slate-500">
+              No websites match your search.
+            </div>
+          )}
+        </section>
+
+        {!isSearching && categories.map((c) => {
+          const items = filtered.filter((w) => w.category === c.id);
+          if (items.length === 0) return null;
+          return (
+            <section key={c.id} id={`cat-${c.id}`} className="mt-16 scroll-mt-24">
+              <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
+                <c.icon className={`h-5 w-5 ${c.iconColor}`} />
+                <h3 className="font-display text-3xl">{c.name}</h3>
+                <span className="text-sm text-slate-400">{counts[c.id]}</span>
+              </div>
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((site) => (
+                  <WebsiteCard key={site.name} site={site} tokens={tokens} isFav={favorites.has(site.name)}
+                    onToggleFav={() => toggleFav(site.name)} onShare={() => share(site)} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </main>
+      <SiteFooter />
     </div>
   );
 }
