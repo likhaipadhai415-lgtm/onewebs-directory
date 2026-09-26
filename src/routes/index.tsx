@@ -211,7 +211,7 @@ function OneWebsHome() {
             </div>
             {bentoCats.map((c, i) => (
               <a key={c.id} href={`#cat-${c.id}`}
-                className={`ow-card group flex flex-col justify-between rounded-3xl border border-slate-200 p-5 hover:border-blue-300 ${i === 0 ? "bg-blue-50" : "bg-white"} ${i === 4 ? "lg:col-span-2" : ""}`}>
+                className={`ow-card group flex flex-col justify-between rounded-3xl border border-slate-200 p-5 hover:border-blue-300 ${i === 0 ? "bg-blue-50" : "bg-white"} ${i >= 4 ? "lg:col-span-2" : ""}`}>
                 <c.icon className={`h-6 w-6 ${c.iconColor}`} />
                 <div className="mt-8">
                   <div className="font-display text-2xl leading-tight">{c.name}</div>
