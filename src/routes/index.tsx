@@ -10,13 +10,18 @@ import {
 import { SiteFooter } from "@/components/SiteFooter";
 import { Highlight, tokenize } from "@/components/Highlight";
 import { useApprovedSites } from "@/hooks/use-approved-sites";
-import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "OneWebs — One Place. Every Website." },
       { name: "description", content: "Discover 1000+ handpicked websites across 100+ categories — AI tools, learning, productivity, shopping, and more." },
+      { property: "og:title", content: "OneWebs — One Place. Every Website." },
+      { property: "og:description", content: "Discover handpicked websites across AI, learning, productivity, shopping, and more." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: "https://onewebs.vercel.app/onewebs-mark.png" },
+      { name: "twitter:image", content: "https://onewebs.vercel.app/onewebs-mark.png" },
       { name: "google-site-verification", content: "q63Xs7Y8fDgb72-p_NmPLGvPmXWAStlzrO-cGugrVGI" },
     ],
   }),
@@ -132,7 +137,7 @@ function OneWebsHome() {
       <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <img src={onewebsMark.url} alt="OneWebs logo" className="ow-logo h-8 w-8 shrink-0 rounded-full object-cover" />
+            <img src="/onewebs-mark.png" alt="OneWebs logo" className="ow-logo h-8 w-8 shrink-0 rounded-full object-cover" />
             <span className="font-display text-2xl leading-none">
               One<span className="italic text-blue-600">Webs</span>
             </span>

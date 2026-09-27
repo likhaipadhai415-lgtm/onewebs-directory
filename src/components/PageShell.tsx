@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { SiteFooter } from "./SiteFooter";
-import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export function PageShell({
   title,
@@ -20,7 +19,7 @@ export function PageShell({
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
             <img
-              src={onewebsMark.url}
+              src="/onewebs-mark.png"
               alt="OneWebs logo"
               className="ow-logo h-9 w-9 shrink-0 rounded-full object-cover shadow-md"
             />
