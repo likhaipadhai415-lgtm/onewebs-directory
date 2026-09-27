@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SubmissionNotifier } from "@/components/SubmissionNotifier";
 import { PerfMonitor } from "@/components/PerfMonitor";
+import { ScrollTextReveal } from "@/components/ScrollTextReveal";
 
 function NotFoundComponent() {
   return (
@@ -133,6 +134,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <ClientOnly fallback={null}>
+        <ScrollTextReveal />
         <SubmissionNotifier />
         <CookieConsent />
         <PerfMonitor />

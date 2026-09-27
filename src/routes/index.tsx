@@ -174,11 +174,11 @@ function OneWebsHome() {
       <main className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Hero */}
         <section className="pb-10 pt-12 text-center sm:pb-14 sm:pt-20">
-          <p className="ow-fade-up text-xs font-medium uppercase tracking-[0.2em] text-blue-600">One place · Every website</p>
-          <h1 className="ow-fade-up mx-auto mt-4 max-w-3xl font-display text-[44px] leading-[1.02] tracking-tight [animation-delay:60ms] sm:text-7xl">
+          <p data-scroll-reveal className="text-xs font-medium uppercase tracking-[0.2em] text-blue-600">One place · Every website</p>
+          <h1 className="mx-auto mt-4 max-w-3xl font-display text-[44px] leading-[1.02] tracking-tight sm:text-7xl">
             The web's best sites, <span className="italic text-blue-600">beautifully</span> organized.
           </h1>
-          <p className="ow-fade-up mx-auto mt-5 max-w-xl text-base text-slate-600 [animation-delay:120ms]">
+          <p data-scroll-reveal className="mx-auto mt-5 max-w-xl text-base text-slate-600">
             A handpicked directory of AI tools, learning platforms, productivity apps and more — no endless Googling.
           </p>
           <div className="ow-fade-up sticky top-[64px] z-30 mx-auto mt-8 max-w-xl [animation-delay:180ms]">
@@ -219,7 +219,7 @@ function OneWebsHome() {
                 className={`ow-card group flex flex-col justify-between rounded-3xl border border-slate-200 p-5 hover:border-blue-300 ${i === 0 ? "bg-blue-50" : "bg-white"} ${i >= 4 ? "lg:col-span-2" : ""}`}>
                 <c.icon className={`h-6 w-6 ${c.iconColor}`} />
                 <div className="mt-8">
-                  <div className="font-display text-2xl leading-tight">{c.name}</div>
+                  <div data-scroll-reveal className="font-display text-2xl leading-tight">{c.name}</div>
                   <div className="mt-1 flex items-center justify-between text-xs text-slate-500">
                     {counts[c.id] ?? 0} websites
                     <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1" />
