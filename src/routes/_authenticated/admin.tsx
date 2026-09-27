@@ -26,6 +26,11 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Admin — Website Submissions" },
+      { name: "description", content: "Review website submissions in the OneWebs admin area." },
+      { property: "og:title", content: "Admin — Website Submissions | OneWebs" },
+      { property: "og:description", content: "Review website submissions in the OneWebs admin area." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),

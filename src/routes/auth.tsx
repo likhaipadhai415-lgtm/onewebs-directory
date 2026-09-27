@@ -10,6 +10,10 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { title: "Sign in — OneWebs" },
       { name: "description", content: "Sign in or create an account to submit and manage websites on OneWebs." },
+      { property: "og:title", content: "Sign in — OneWebs" },
+      { property: "og:description", content: "Sign in or create an account to submit and manage websites on OneWebs." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
