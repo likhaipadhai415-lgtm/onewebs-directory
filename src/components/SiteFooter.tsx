@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import onewebsMark from "@/assets/onewebs-mark.png.asset.json";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -9,7 +8,7 @@ export function SiteFooter() {
         <div>
           <div className="flex items-center gap-2">
             <img
-              src={onewebsMark.url}
+              src="/onewebs-mark.png"
               alt="OneWebs logo"
               className="ow-logo h-9 w-9 rounded-full object-cover shadow-md"
             />

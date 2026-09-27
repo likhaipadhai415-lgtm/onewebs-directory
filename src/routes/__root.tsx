@@ -11,15 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import onewebsLogo from "../assets/onewebs-mark.png.asset.json";
 import { ClientOnly } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SubmissionNotifier } from "@/components/SubmissionNotifier";
 import { PerfMonitor } from "@/components/PerfMonitor";
-
-const SITE_URL = "https://find-best-sites.lovable.app";
-const LOGO_URL = `${SITE_URL}${onewebsLogo.url}`;
 
 function NotFoundComponent() {
   return (
@@ -93,11 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Discover 1000+ handpicked websites across 100+ categories — AI tools, learning, productivity, shopping, and more." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "OneWebs — One Place. Every Website." },
       { name: "twitter:description", content: "Discover 1000+ handpicked websites across 100+ categories — AI tools, learning, productivity, shopping, and more." },
-      { property: "og:image", content: LOGO_URL },
-      { name: "twitter:image", content: LOGO_URL },
     ],
     links: [
       {
@@ -106,7 +99,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "shortcut icon", type: "image/png", href: "/favicon.png" },
-      { rel: "apple-touch-icon", href: onewebsLogo.url },
+      { rel: "apple-touch-icon", href: "/onewebs-mark.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700;800;900&display=swap" },
