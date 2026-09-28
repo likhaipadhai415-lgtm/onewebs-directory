@@ -257,6 +257,24 @@ function OneWebsHome() {
 
         {!isSearching && (
           <section className="sm:hidden" aria-label="Browse categories">
+            <div data-scroll-reveal className="mb-8 bg-slate-900 px-5 py-5 text-white">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-300">Editor's picks</span>
+                  <h2 className="mt-1 font-display text-2xl">Start somewhere good.</h2>
+                </div>
+                <span className="text-xs text-slate-400">01 / 03</span>
+              </div>
+              <div className="mt-4 flex items-center gap-4">
+                {featured.map((site) => (
+                  <a key={site.name} href={site.url} target="_blank" rel="noopener noreferrer"
+                    className="flex min-w-0 flex-1 flex-col items-center gap-1.5 text-center text-xs font-medium">
+                    <img src={site.logoUrl ?? faviconFor(site.domain)} alt="" className="h-9 w-9 rounded-md bg-white object-contain p-1" loading="lazy" />
+                    <span className="max-w-full truncate">{site.name}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
             <div className="mb-3 flex items-end justify-between">
               <h2 className="font-display text-2xl">Explore by category</h2>
               <Link to="/categories" className="text-xs font-medium text-blue-600">See all</Link>
