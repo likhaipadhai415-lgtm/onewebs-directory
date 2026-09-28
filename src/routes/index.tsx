@@ -257,7 +257,7 @@ function OneWebsHome() {
 
         {!isSearching && (
           <section className="sm:hidden" aria-label="Browse categories">
-            <div data-scroll-reveal className="mb-8 bg-slate-900 px-5 py-5 text-white">
+            <div data-scroll-reveal className="ow-featured mb-8 bg-slate-900 px-5 py-5 text-white">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-300">Editor's picks</span>

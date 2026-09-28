@@ -20,7 +20,7 @@ export function ScrollTextReveal() {
 
     const register = () => {
       document.querySelectorAll("main h1, main h2, main h3, main p, main .ow-card, main [data-scroll-reveal], footer [data-scroll-reveal]").forEach((element) => {
-        if (element.matches("p") && element.closest(".ow-card")) return;
+        if (element.matches("p") && element.closest(".ow-card, [data-scroll-reveal]")) return;
         if (seen.has(element)) return;
         seen.add(element);
         observer.observe(element);
