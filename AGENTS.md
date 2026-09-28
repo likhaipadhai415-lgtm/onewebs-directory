@@ -10,4 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Serve the OneWebs brand mark from `public/onewebs-mark.png` on every page and use its deployed absolute URL only in leaf-page social metadata, because provider-specific asset paths do not work on external hosts such as Vercel.
-- Use one root-mounted IntersectionObserver for scroll text reveals across routes, so up/down replay stays lightweight and respects reduced-motion preferences.
+- Use one root-mounted IntersectionObserver for scroll reveals of text, cards, and logos across routes, so up/down replay stays lightweight and respects reduced-motion preferences.

@@ -66,7 +66,7 @@ export function PageShell({
         <h1 className="ow-fade-up mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">
           {title}
         </h1>
-        {intro && <p className="mt-3 text-base text-slate-600">{intro}</p>}
+        {intro && <p data-scroll-reveal className="mt-3 text-base text-slate-600">{intro}</p>}
         <div className="mt-8 space-y-5 text-sm leading-relaxed text-slate-700 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h3]:mt-6 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-slate-900 [&_a]:text-blue-600 [&_a:hover]:underline [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-1 [&_p]:leading-relaxed">
           {children}
         </div>

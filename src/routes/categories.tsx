@@ -39,13 +39,14 @@ function CategoriesPage() {
             key={c.id}
             to="/"
             hash={`cat-${c.id}`}
-            className={`flex items-center gap-3 rounded-2xl border border-slate-100 ${c.tint} p-4 transition hover:-translate-y-0.5 hover:shadow-md`}
+            data-scroll-reveal
+            className={`ow-card flex items-center gap-3 rounded-2xl border border-slate-100 ${c.tint} p-4 transition hover:-translate-y-0.5 hover:shadow-md`}
           >
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/70 shadow-sm">
               <c.icon className={`h-5 w-5 ${c.iconColor}`} />
             </span>
             <span className="min-w-0">
-              <span className="block truncate text-sm font-semibold text-slate-900">
+              <span className="ow-site-name block truncate text-sm font-semibold text-slate-900">
                 {c.name}
               </span>
               <span className="text-xs text-slate-500">

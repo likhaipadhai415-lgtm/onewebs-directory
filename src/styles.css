@@ -190,6 +190,20 @@
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+/* Card content enters a beat after its surface; logo and name stay readable together. */
+.ow-card.ow-reveal-ready img,
+.ow-card.ow-reveal-ready .ow-site-name,
+[data-scroll-reveal].ow-reveal-ready .ow-logo {
+  opacity: 0;
+  transform: translate3d(0, 8px, 0) scale(0.96);
+  transition: opacity 0.4s ease 0.08s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.08s;
+}
+.ow-card.ow-reveal-visible img,
+.ow-card.ow-reveal-visible .ow-site-name,
+[data-scroll-reveal].ow-reveal-visible .ow-logo {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
 .ow-card {
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
@@ -220,6 +234,8 @@
   .ow-fade-up { animation-duration: 0.32s; }
   .ow-pop { animation-duration: 0.22s; }
   .ow-reveal-ready { transform: translate3d(0, 10px, 0); transition-duration: 0.32s; }
+  .ow-card.ow-reveal-ready img, .ow-card.ow-reveal-ready .ow-site-name,
+  [data-scroll-reveal].ow-reveal-ready .ow-logo { transition-duration: 0.28s; }
   /* infinite animations are the main battery/jank cost on phones */
   .ow-float { animation: none; }
   .ow-gradient-text {
@@ -237,7 +253,9 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .ow-fade-up, .ow-pop, .ow-float, .ow-gradient-text, .ow-reveal-ready { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .ow-fade-up, .ow-pop, .ow-float, .ow-gradient-text, .ow-reveal-ready,
+  .ow-card.ow-reveal-ready img, .ow-card.ow-reveal-ready .ow-site-name,
+  [data-scroll-reveal].ow-reveal-ready .ow-logo { animation: none !important; opacity: 1 !important; transform: none !important; }
   .ow-card, .ow-logo { transition: none !important; }
   .ow-card:hover, .ow-card:active, .ow-logo:hover { transform: none !important; filter: none !important; }
 }
