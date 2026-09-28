@@ -17,6 +17,7 @@ export const Route = createFileRoute("/trending")({
       { property: "og:description", content: DESC },
       { property: "og:url", content: URL },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: URL }],
   }),

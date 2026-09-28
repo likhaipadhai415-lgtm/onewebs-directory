@@ -14,6 +14,7 @@ export const Route = createFileRoute("/cookies")({
       { property: "og:description", content: DESC },
       { property: "og:url", content: URL },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: URL }],
   }),

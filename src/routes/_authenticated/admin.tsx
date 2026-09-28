@@ -212,7 +212,7 @@ function SubmissionCard({
   tab: Tab;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+    <div data-scroll-reveal className="ow-card rounded-2xl border border-slate-200 bg-white p-4">
       <div className="flex items-start gap-4">
         <img
           src={s.logo_url}
@@ -221,7 +221,7 @@ function SubmissionCard({
         />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="text-base font-semibold text-slate-900">{s.name}</div>
+            <div className="ow-site-name text-base font-semibold text-slate-900">{s.name}</div>
             <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
               {s.category}
             </span>
