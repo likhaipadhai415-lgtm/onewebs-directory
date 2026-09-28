@@ -1,0 +1,3 @@
+- [ ] Extend lightweight scroll-up/down reveals to site cards, logos, names, and supporting text throughout OneWebs.
+- [ ] Make mobile directory browsing shorter and more varied with category selection and expandable lists.
+- [ ] Verify mobile and desktop scrolling, navigation, and reduced-motion behavior.

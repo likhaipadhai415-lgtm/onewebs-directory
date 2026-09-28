@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "@tanstack/react-router";
 
-/** Replays lightweight text reveals whenever copy enters the viewport from either direction. */
+/** Replays lightweight reveals whenever page content enters the viewport from either direction. */
 export function ScrollTextReveal() {
   const pathname = useLocation({ select: (location) => location.pathname });
 
@@ -19,7 +19,8 @@ export function ScrollTextReveal() {
     );
 
     const register = () => {
-      document.querySelectorAll("main h1, main h2, main h3, main [data-scroll-reveal]").forEach((element) => {
+      document.querySelectorAll("main h1, main h2, main h3, main p, main .ow-card, main [data-scroll-reveal], footer [data-scroll-reveal]").forEach((element) => {
+        if (element.matches("p") && element.closest(".ow-card, [data-scroll-reveal]")) return;
         if (seen.has(element)) return;
         seen.add(element);
         observer.observe(element);
@@ -30,8 +31,10 @@ export function ScrollTextReveal() {
 
     register();
     const main = document.querySelector("main");
+    const footer = document.querySelector("footer");
     const changes = new MutationObserver(register);
     if (main) changes.observe(main, { childList: true, subtree: true });
+    if (footer) changes.observe(footer, { childList: true, subtree: true });
 
     return () => {
       changes.disconnect();

@@ -22,6 +22,7 @@ export const Route = createFileRoute("/submit")({
       { property: "og:description", content: DESC },
       { property: "og:url", content: URL },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: URL }],
   }),
@@ -391,7 +392,7 @@ function MySubmissions({
       ) : (
         <ul className="mt-4 divide-y divide-slate-100">
           {rows.map((s) => (
-            <li key={s.id} className="flex items-start gap-3 py-3">
+            <li key={s.id} data-scroll-reveal className="ow-card flex items-start gap-3 py-3">
               <img
                 src={s.logo_url}
                 alt=""
@@ -399,7 +400,7 @@ function MySubmissions({
               />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="truncate text-sm font-semibold text-slate-900">{s.name}</span>
+                  <span className="ow-site-name truncate text-sm font-semibold text-slate-900">{s.name}</span>
                   <StatusBadge status={s.status} />
                 </div>
                 <a

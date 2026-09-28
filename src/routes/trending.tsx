@@ -17,6 +17,7 @@ export const Route = createFileRoute("/trending")({
       { property: "og:description", content: DESC },
       { property: "og:url", content: URL },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: URL }],
   }),
@@ -32,10 +33,10 @@ function TrendingPage() {
         {list.map((s) => {
           const cat = categoryById(s.category);
           return (
-            <div key={s.name} className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3">
+            <div key={s.name} data-scroll-reveal className="ow-card flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3">
               <img src={s.logoUrl ?? faviconFor(s.domain)} alt="" className="h-8 w-8 rounded-lg border border-slate-100 bg-slate-50 object-contain p-1" />
               <div className="min-w-0 flex-1">
-                <div className="truncate text-sm font-semibold text-slate-900">{s.name}</div>
+                <div className="ow-site-name truncate text-sm font-semibold text-slate-900">{s.name}</div>
                 <div className="truncate text-xs text-slate-500">{cat?.name}</div>
               </div>
               <a href={s.url} target="_blank" rel="noopener noreferrer" className="grid h-8 w-8 place-items-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50" aria-label={`Open ${s.name}`}>

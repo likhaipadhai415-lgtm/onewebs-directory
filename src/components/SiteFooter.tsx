@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="mt-12 border-t border-slate-100 bg-white">
       <div className="mx-auto grid max-w-[1600px] gap-8 px-4 py-10 sm:px-6 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
+          <div data-scroll-reveal className="flex items-center gap-2">
             <img
               src="/onewebs-mark.png"
               alt="OneWebs logo"
