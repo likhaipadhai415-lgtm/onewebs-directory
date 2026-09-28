@@ -57,6 +57,21 @@ function OneWebsHome() {
     } catch { /* ignore */ }
   }, [favorites]);
 
+  useEffect(() => {
+    const selectHashCategory = () => {
+      if (!window.matchMedia("(max-width: 639px)").matches) return;
+      const id = decodeURIComponent(window.location.hash.replace(/^#cat-/, ""));
+      if (categories.some((category) => category.id === id)) {
+        setMobileCategory(id);
+        setVisibleCount(6);
+        window.setTimeout(() => document.getElementById("popular")?.scrollIntoView({ behavior: "smooth" }), 50);
+      }
+    };
+    selectHashCategory();
+    window.addEventListener("hashchange", selectHashCategory);
+    return () => window.removeEventListener("hashchange", selectHashCategory);
+  }, []);
+
   const tokens = tokenize(query);
   const isSearching = tokens.length > 0;
 
@@ -299,7 +314,7 @@ function OneWebsHome() {
                <Button variant="outline" onClick={() => setVisibleCount((n) => n + 6)} className="rounded-full px-6">Show more websites <ChevronRight className="h-4 w-4" /></Button>
              </div>
            )}
-          {filtered.length === 0 && (
+           {(isMobile ? mobileResults.length : filtered.length) === 0 && (
              <div className="mt-6 rounded-3xl border border-dashed border-slate-200 p-12 text-center text-sm text-slate-500">
               No websites match your search.
             </div>
