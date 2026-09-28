@@ -10,6 +10,8 @@ import {
 import { SiteFooter } from "@/components/SiteFooter";
 import { Highlight, tokenize } from "@/components/Highlight";
 import { useApprovedSites } from "@/hooks/use-approved-sites";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +38,9 @@ function OneWebsHome() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showRankInfo, setShowRankInfo] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileCategory, setMobileCategory] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(6);
+  const isMobile = useIsMobile();
   const { data: approvedExtras = [] } = useApprovedSites();
   const allSites = useMemo(() => [...websites, ...approvedExtras], [approvedExtras]);
 
@@ -131,6 +136,8 @@ function OneWebsHome() {
   const featured = allSites.filter((w) => w.popular).slice(0, 3);
   const bentoCats = categories.slice(0, 6);
   const navCls = "text-slate-600 transition hover:text-slate-900";
+  const mobileResults = isSearching || !mobileCategory ? filtered : filtered.filter((w) => w.category === mobileCategory);
+  const selectedCategoryName = categories.find((c) => c.id === mobileCategory)?.name;
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">
@@ -194,7 +201,7 @@ function OneWebsHome() {
 
         {/* Bento */}
         {!isSearching && (
-          <section id="categories" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-[auto_auto_auto]">
+          <section id="categories" className="hidden grid-cols-2 gap-3 sm:grid sm:gap-4 lg:grid-cols-4 lg:grid-rows-[auto_auto_auto]">
             <div className="col-span-2 row-span-2 flex flex-col justify-between rounded-3xl bg-slate-900 p-6 text-white sm:p-8">
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-blue-300">Editor's picks</span>
@@ -220,7 +227,7 @@ function OneWebsHome() {
                 <c.icon className={`h-6 w-6 ${c.iconColor}`} />
                 <div className="mt-8">
                   <div data-scroll-reveal className="font-display text-2xl leading-tight">{c.name}</div>
-                  <div className="mt-1 flex items-center justify-between text-xs text-slate-500">
+                   <div className="mt-1 flex items-center justify-between text-xs text-slate-500">
                     {counts[c.id] ?? 0} websites
                     <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </div>
@@ -233,13 +240,32 @@ function OneWebsHome() {
           </section>
         )}
 
+        {!isSearching && (
+          <section className="sm:hidden" aria-label="Browse categories">
+            <div className="mb-3 flex items-end justify-between">
+              <h2 className="font-display text-2xl">Explore by category</h2>
+              <Link to="/categories" className="text-xs font-medium text-blue-600">See all</Link>
+            </div>
+            <div className="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <Button type="button" variant={mobileCategory === null ? "default" : "outline"} size="sm" onClick={() => { setMobileCategory(null); setVisibleCount(6); }} className="shrink-0 snap-start rounded-full">For you</Button>
+              {categories.map((c) => (
+                <Button key={c.id} type="button" variant={mobileCategory === c.id ? "default" : "outline"} size="sm"
+                  onClick={() => { setMobileCategory(c.id); setVisibleCount(6); }}
+                  className="shrink-0 snap-start rounded-full">
+                  <c.icon className="h-4 w-4" />{c.name}
+                </Button>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Results */}
-        <section id="popular" className="mt-16">
+        <section id="popular" className="mt-8 sm:mt-16">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 pb-4">
             <div>
-              <h2 className="font-display text-4xl">{isSearching ? "Results" : "Popular right now"}</h2>
+              <h2 className="font-display text-3xl sm:text-4xl">{isSearching ? "Results" : <><span className="sm:hidden">{selectedCategoryName ?? "Discover websites"}</span><span className="hidden sm:inline">Popular right now</span></>}</h2>
               <p className="mt-1 text-sm text-slate-500">
-                {isSearching ? `${filtered.length} matches, ranked by relevance` : "The most useful sites, handpicked."}
+                {isSearching ? `${filtered.length} matches, ranked by relevance` : <><span className="sm:hidden">{mobileResults.length} handpicked websites</span><span className="hidden sm:inline">The most useful sites, handpicked.</span></>}
                 <button onClick={() => setShowRankInfo((v) => !v)} className="ml-2 inline-flex align-middle text-slate-400 hover:text-slate-700" aria-label="How ranking works">
                   <Info className="h-3.5 w-3.5" />
                 </button>
@@ -262,14 +288,19 @@ function OneWebsHome() {
             </div>
           )}
 
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.slice(0, isSearching ? 60 : 12).map((site) => (
+           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+             {(isMobile ? mobileResults.slice(0, visibleCount) : filtered.slice(0, isSearching ? 60 : 12)).map((site) => (
               <WebsiteCard key={site.name} site={site} tokens={tokens} isFav={favorites.has(site.name)}
                 onToggleFav={() => toggleFav(site.name)} onShare={() => share(site)} />
             ))}
           </div>
+           {isMobile && mobileResults.length > visibleCount && (
+             <div className="mt-6 flex justify-center sm:hidden">
+               <Button variant="outline" onClick={() => setVisibleCount((n) => n + 6)} className="rounded-full px-6">Show more websites <ChevronRight className="h-4 w-4" /></Button>
+             </div>
+           )}
           {filtered.length === 0 && (
-            <div className="mt-6 rounded-3xl border border-dashed border-slate-200 p-12 text-center text-sm text-slate-500">
+             <div className="mt-6 rounded-3xl border border-dashed border-slate-200 p-12 text-center text-sm text-slate-500">
               No websites match your search.
             </div>
           )}
@@ -279,7 +310,7 @@ function OneWebsHome() {
           const items = filtered.filter((w) => w.category === c.id);
           if (items.length === 0) return null;
           return (
-            <section key={c.id} id={`cat-${c.id}`} className="mt-16 scroll-mt-24">
+             <section key={c.id} id={`cat-${c.id}`} className="mt-16 hidden scroll-mt-24 sm:block">
               <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
                 <c.icon className={`h-5 w-5 ${c.iconColor}`} />
                 <h3 className="font-display text-3xl">{c.name}</h3>
@@ -338,7 +369,7 @@ function WebsiteCard({
   }
 
   return (
-    <div className="ow-card ow-pop group flex flex-col rounded-3xl border border-slate-200 bg-white p-5 hover:border-blue-300 hover:shadow-[0_10px_40px_-12px_rgb(37_99_235/0.25)]">
+     <div className="ow-card group flex flex-col rounded-3xl border border-slate-200 bg-white p-5 hover:border-blue-300 hover:shadow-[0_10px_40px_-12px_rgb(37_99_235/0.25)]">
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
         <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
           {!imgError ? (
@@ -355,7 +386,7 @@ function WebsiteCard({
         </div>
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-1">
-            <span className="truncate text-sm font-semibold text-slate-900">
+             <span className="ow-site-name truncate text-sm font-semibold text-slate-900">
               <Highlight text={site.name} tokens={tokens} />
             </span>
             {site.official && (
