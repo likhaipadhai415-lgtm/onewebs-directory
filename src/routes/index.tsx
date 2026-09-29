@@ -171,6 +171,12 @@ function OneWebsHome() {
             <Link to="/about" className={navCls}>About</Link>
           </nav>
           <div className="flex items-center gap-2">
+            <Link to="/favorites" aria-label="My favorites" className="relative grid h-9 w-9 place-items-center rounded-full border border-slate-200 text-rose-500 hover:bg-rose-50">
+              <Heart className={`h-4 w-4 ${favorites.size ? "fill-rose-500" : ""}`} />
+              {favorites.size > 0 && (
+                <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">{favorites.size}</span>
+              )}
+            </Link>
             <Link to="/profile" aria-label="Account" className="hidden h-9 w-9 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 sm:grid">
               <User className="h-4 w-4" />
             </Link>
@@ -185,7 +191,7 @@ function OneWebsHome() {
         </div>
         {menuOpen && (
           <nav className="grid gap-1 border-t border-slate-100 px-4 py-3 text-sm font-medium text-slate-700 lg:hidden">
-            {([["/categories","Categories"],["/trending","Trending"],["/new","New Websites"],["/about","About"],["/profile","Profile"]] as const).map(([to, label]) => (
+            {([["/categories","Categories"],["/trending","Trending"],["/new","New Websites"],["/favorites","My Favorites"],["/about","About"],["/profile","Profile"]] as const).map(([to, label]) => (
               <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2 hover:bg-slate-50">{label}</Link>
             ))}
             <Link to="/submit" onClick={() => setMenuOpen(false)} className="mt-1 rounded-full bg-slate-900 px-3 py-2 text-center text-white">Submit a site</Link>
