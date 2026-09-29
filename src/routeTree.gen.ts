@@ -16,6 +16,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NewRouteImport } from './routes/new'
+import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -59,6 +60,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const NewRoute = NewRouteImport.update({
   id: '/new',
   path: '/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DisclaimerRoute = DisclaimerRouteImport.update({
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/favorites': typeof FavoritesRoute
   '/new': typeof NewRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/favorites': typeof FavoritesRoute
   '/new': typeof NewRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/favorites': typeof FavoritesRoute
   '/new': typeof NewRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookies'
     | '/disclaimer'
+    | '/favorites'
     | '/new'
     | '/privacy'
     | '/profile'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookies'
     | '/disclaimer'
+    | '/favorites'
     | '/new'
     | '/privacy'
     | '/profile'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookies'
     | '/disclaimer'
+    | '/favorites'
     | '/new'
     | '/privacy'
     | '/profile'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
   DisclaimerRoute: typeof DisclaimerRoute
+  FavoritesRoute: typeof FavoritesRoute
   NewRoute: typeof NewRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
@@ -281,6 +294,13 @@ declare module '@tanstack/react-router' {
       path: '/new'
       fullPath: '/new'
       preLoaderRoute: typeof NewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/disclaimer': {
@@ -369,6 +389,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
   DisclaimerRoute: DisclaimerRoute,
+  FavoritesRoute: FavoritesRoute,
   NewRoute: NewRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
