@@ -3,3 +3,4 @@
 - [x] Verify mobile and desktop scrolling, navigation, and reduced-motion behavior.
 - [ ] Expand every category with more established, relevant websites and ensure they are all discoverable.
 - [ ] Verify category browsing and search on desktop and mobile.
+- [ ] Add pricing, platform, and feature filters to category browsing and verify combined filtering.
