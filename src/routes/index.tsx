@@ -12,6 +12,8 @@ import { Highlight, tokenize } from "@/components/Highlight";
 import { useApprovedSites } from "@/hooks/use-approved-sites";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { availableFeatures, featuresFor, hasPlatform, matchesPrice, type Platform, type PriceFilter } from "@/lib/directory-filters";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,6 +42,10 @@ function OneWebsHome() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileCategory, setMobileCategory] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [priceFilter, setPriceFilter] = useState<PriceFilter>("Any price");
+  const [platformFilter, setPlatformFilter] = useState<Platform | "Any platform">("Any platform");
+  const [featureFilter, setFeatureFilter] = useState("Any feature");
   const isMobile = useIsMobile();
   const { data: approvedExtras = [] } = useApprovedSites();
   const allSites = useMemo(() => [...websites, ...approvedExtras], [approvedExtras]);
@@ -59,10 +65,9 @@ function OneWebsHome() {
 
   useEffect(() => {
     const selectHashCategory = () => {
-      if (!window.matchMedia("(max-width: 639px)").matches) return;
       const id = decodeURIComponent(window.location.hash.replace(/^#cat-/, ""));
       if (categories.some((category) => category.id === id)) {
-        setMobileCategory(id);
+        setCategoryFilter(id);
         setVisibleCount(6);
         window.setTimeout(() => document.getElementById("popular")?.scrollIntoView({ behavior: "smooth" }), 50);
       }
@@ -80,6 +85,14 @@ function OneWebsHome() {
     for (const w of allSites) map[w.category] = (map[w.category] ?? 0) + 1;
     return map;
   }, [allSites]);
+
+  const categorySites = useMemo(() => categoryFilter === "all" ? allSites : allSites.filter((site) => site.category === categoryFilter), [allSites, categoryFilter]);
+  const featureOptions = useMemo(() => availableFeatures(categorySites), [categorySites]);
+  const changeCategory = (id: string) => {
+    setCategoryFilter(id);
+    setFeatureFilter("Any feature");
+    setVisibleCount(6);
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -121,6 +134,8 @@ function OneWebsHome() {
     };
 
     const scored = allSites
+      .filter((w) => categoryFilter === "all" || w.category === categoryFilter)
+      .filter((w) => matchesPrice(w, priceFilter) && hasPlatform(w, platformFilter) && (featureFilter === "Any feature" || featuresFor(w).includes(featureFilter)))
       .filter(matchesFilter)
       .map((w) => ({ w, s: scoreOf(w) }))
       .filter(({ s }) => s >= 0);
@@ -129,7 +144,7 @@ function OneWebsHome() {
       scored.sort((a, b) => b.s - a.s);
     }
     return scored.map(({ w }) => w);
-  }, [query, filter, allSites]);
+  }, [query, filter, allSites, categoryFilter, priceFilter, platformFilter, featureFilter]);
 
   const toggleFav = (name: string) => {
     setFavorites((prev) => {
@@ -151,8 +166,9 @@ function OneWebsHome() {
   const featured = allSites.filter((w) => w.popular).slice(0, 3);
   const bentoCats = categories.slice(0, 6);
   const navCls = "text-slate-600 transition hover:text-slate-900";
-  const mobileResults = isSearching || !mobileCategory ? filtered : filtered.filter((w) => w.category === mobileCategory);
-  const selectedCategoryName = categories.find((c) => c.id === mobileCategory)?.name;
+  const mobileResults = filtered;
+  const selectedCategoryName = categories.find((c) => c.id === categoryFilter)?.name;
+  const filtersActive = categoryFilter !== "all" || priceFilter !== "Any price" || platformFilter !== "Any platform" || featureFilter !== "Any feature" || filter !== "All";
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">
@@ -286,10 +302,10 @@ function OneWebsHome() {
               <Link to="/categories" className="text-xs font-medium text-blue-600">See all</Link>
             </div>
             <div className="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <Button type="button" variant={mobileCategory === null ? "default" : "outline"} size="sm" onClick={() => { setMobileCategory(null); setVisibleCount(6); }} className="shrink-0 snap-start rounded-full">For you</Button>
+              <Button type="button" variant={categoryFilter === "all" ? "default" : "outline"} size="sm" onClick={() => changeCategory("all")} className="shrink-0 snap-start rounded-full">For you</Button>
               {categories.map((c) => (
-                <Button key={c.id} type="button" variant={mobileCategory === c.id ? "default" : "outline"} size="sm"
-                  onClick={() => { setMobileCategory(c.id); setVisibleCount(6); }}
+                <Button key={c.id} type="button" variant={categoryFilter === c.id ? "default" : "outline"} size="sm"
+                  onClick={() => changeCategory(c.id)}
                   className="shrink-0 snap-start rounded-full">
                   <c.icon className="h-4 w-4" />{c.name}
                 </Button>
@@ -302,23 +318,55 @@ function OneWebsHome() {
         <section id="popular" className="mt-8 sm:mt-16">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 pb-4">
             <div>
-              <h2 className="font-display text-3xl sm:text-4xl">{isSearching ? "Results" : <><span className="sm:hidden">{selectedCategoryName ?? "Discover websites"}</span><span className="hidden sm:inline">Popular right now</span></>}</h2>
+               <h2 className="font-display text-3xl sm:text-4xl">{isSearching ? "Results" : <><span className="sm:hidden">{selectedCategoryName ?? "Discover websites"}</span><span className="hidden sm:inline">{selectedCategoryName ?? "Popular right now"}</span></>}</h2>
               <p className="mt-1 text-sm text-slate-500">
-                {isSearching ? `${filtered.length} matches, ranked by relevance` : <><span className="sm:hidden">{mobileResults.length} handpicked websites</span><span className="hidden sm:inline">The most useful sites, handpicked.</span></>}
+                 {isSearching || filtersActive ? `${filtered.length} matching websites${isSearching ? ", ranked by relevance" : ""}` : <><span className="sm:hidden">{mobileResults.length} handpicked websites</span><span className="hidden sm:inline">The most useful sites, handpicked.</span></>}
                 <button onClick={() => setShowRankInfo((v) => !v)} className="ml-2 inline-flex align-middle text-slate-400 hover:text-slate-700" aria-label="How ranking works">
                   <Info className="h-3.5 w-3.5" />
                 </button>
               </p>
             </div>
-            <div className="flex max-w-full gap-1 overflow-x-auto rounded-full bg-slate-100 p-1">
+           <div className="flex max-w-full gap-1 overflow-x-auto rounded-full bg-muted p-1">
               {(["All", "Free", "Freemium", "Paid", "Popular", "New"] as Filter[]).map((f) => (
-                <button key={f} onClick={() => setFilter(f)}
-                  className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition ${filter === f ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}>
+                 <Button key={f} size="sm" variant={filter === f ? "secondary" : "ghost"} onClick={() => { setFilter(f); setVisibleCount(6); }}
+                   className="shrink-0 rounded-full px-3 text-xs">
                   {f}
-                </button>
+                 </Button>
               ))}
             </div>
           </div>
+
+           <div className="mt-4 flex flex-wrap items-end gap-2 border-b border-border pb-4" aria-label="Filter websites">
+             <label className="min-w-[145px] flex-1 sm:max-w-[220px]">
+               <span className="mb-1 block text-xs font-medium text-muted-foreground">Category</span>
+               <Select value={categoryFilter} onValueChange={changeCategory}>
+                 <SelectTrigger aria-label="Category"><SelectValue /></SelectTrigger>
+                 <SelectContent><SelectItem value="all">All categories</SelectItem>{categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+               </Select>
+             </label>
+             <label className="min-w-[135px] flex-1 sm:max-w-[180px]">
+               <span className="mb-1 block text-xs font-medium text-muted-foreground">Price</span>
+               <Select value={priceFilter} onValueChange={(value: PriceFilter) => { setPriceFilter(value); setVisibleCount(6); }}>
+                 <SelectTrigger aria-label="Price"><SelectValue /></SelectTrigger>
+                 <SelectContent>{(["Any price", "Free plan", "Paid plan"] as const).map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent>
+               </Select>
+             </label>
+             <label className="min-w-[135px] flex-1 sm:max-w-[180px]">
+               <span className="mb-1 block text-xs font-medium text-muted-foreground">Platform</span>
+               <Select value={platformFilter} onValueChange={(value: Platform | "Any platform") => { setPlatformFilter(value); setVisibleCount(6); }}>
+                 <SelectTrigger aria-label="Platform"><SelectValue /></SelectTrigger>
+                 <SelectContent>{(["Any platform", "Web", "Mobile app", "Desktop app"] as const).map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent>
+               </Select>
+             </label>
+             <label className="min-w-[145px] flex-1 sm:max-w-[220px]">
+               <span className="mb-1 block text-xs font-medium text-muted-foreground">Feature</span>
+               <Select value={featureFilter} onValueChange={(value) => { setFeatureFilter(value); setVisibleCount(6); }}>
+                 <SelectTrigger aria-label="Feature"><SelectValue /></SelectTrigger>
+                 <SelectContent><SelectItem value="Any feature">Any feature</SelectItem>{featureOptions.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent>
+               </Select>
+             </label>
+             {filtersActive && <Button variant="ghost" size="sm" onClick={() => { changeCategory("all"); setPriceFilter("Any price"); setPlatformFilter("Any platform"); setFilter("All"); }} className="mb-0.5">Clear filters</Button>}
+           </div>
 
           {showRankInfo && (
             <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-700">
@@ -328,7 +376,7 @@ function OneWebsHome() {
           )}
 
            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-             {(isMobile ? mobileResults.slice(0, visibleCount) : filtered.slice(0, isSearching ? 60 : 12)).map((site) => (
+              {(isMobile ? mobileResults.slice(0, visibleCount) : filtered.slice(0, isSearching || filtersActive ? undefined : 12)).map((site) => (
               <WebsiteCard key={site.name} site={site} tokens={tokens} isFav={favorites.has(site.name)}
                 onToggleFav={() => toggleFav(site.name)} onShare={() => share(site)} />
             ))}
@@ -340,12 +388,12 @@ function OneWebsHome() {
            )}
            {(isMobile ? mobileResults.length : filtered.length) === 0 && (
              <div className="mt-6 rounded-3xl border border-dashed border-slate-200 p-12 text-center text-sm text-slate-500">
-              No websites match your search.
+               No websites match these filters. Try changing a filter or clearing them.
             </div>
           )}
         </section>
 
-        {!isSearching && categories.map((c) => {
+         {!isSearching && categoryFilter === "all" && categories.map((c) => {
           const items = filtered.filter((w) => w.category === c.id);
           if (items.length === 0) return null;
           return (
